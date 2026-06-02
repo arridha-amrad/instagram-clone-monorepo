@@ -1,8 +1,8 @@
-import withPrisma from "@/lib/prisma";
-import { requireAuth } from "@/middlewares/requireAuth";
+import withPrisma from "@/lib/prisma.js";
+import { requireAuth } from "@/middlewares/requireAuth.js";
 import { Hono } from "hono";
-import { commentsControllers } from "./controllers";
-import { Env } from "@/types";
+import { commentsControllers } from "./controllers/index.js";
+import { Env } from "@/types.js";
 
 const commentRoutes = new Hono<Env>();
 

@@ -1,16 +1,16 @@
 import "dotenv/config";
 
 import { Hono } from "hono";
-import { logger } from "hono/logger";
-import withPrisma from "./lib/prisma";
-import { auth } from "./lib/auth";
 import { cors } from "hono/cors";
-import fileRoutes from "./features/file-uploads/routes";
-import { Env } from "./types";
-import postRoutes from "./features/post/routes";
-import usersRoutes from "./features/users/routes";
-import { env } from "@/config/env";
-import commentRoutes from "./features/comments/route";
+import { logger } from "hono/logger";
+import { env } from "process";
+import commentRoutes from "./features/comments/route.js";
+import fileRoutes from "./features/file-uploads/routes.js";
+import postRoutes from "./features/post/routes.js";
+import { auth } from "./lib/auth.js";
+import withPrisma from "./lib/prisma.js";
+import { Env } from "./types.js";
+import usersRoutes from "./features/users/routes.js";
 
 const app = new Hono<Env>();
 

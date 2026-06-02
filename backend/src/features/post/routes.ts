@@ -1,8 +1,8 @@
 import { Hono } from "hono";
-import { postController } from "./controllers";
-import withPrisma from "@/lib/prisma";
-import { requireAuth } from "@/middlewares/requireAuth";
-import { Env } from "@/types";
+import { postController } from "./controllers/index.js";
+import withPrisma from "@/lib/prisma.js";
+import { requireAuth } from "@/middlewares/requireAuth.js";
+import { Env } from "@/types.js";
 
 const postRoutes = new Hono<Env>();
 

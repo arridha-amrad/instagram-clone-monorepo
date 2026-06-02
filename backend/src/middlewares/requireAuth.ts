@@ -1,4 +1,4 @@
-import { Env } from "@/types";
+import { Env } from "../types.js";
 import { MiddlewareHandler } from "hono";
 
 export const requireAuth: MiddlewareHandler<Env> = async (c, next) => {

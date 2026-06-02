@@ -1,13 +1,13 @@
-import { errorHandler } from "@/features/utils";
-import { Env } from "@/types";
+import { errorHandler } from "@/features/utils.js";
+import { Env } from "@/types.js";
 import { Context } from "hono";
-import { bookmarkPost } from "./bookmark-post";
-import createPost from "./create-post";
-import { TCreatePostSchema } from "./create-post/schema";
-import { deletePost } from "./delete-post";
-import { fetchFeedPosts } from "./feed-posts";
-import { likePost } from "./like-post";
-import { repost } from "./repost";
+import { bookmarkPost } from "./bookmark-post.js";
+import createPost from "./create-post/index.js";
+import { TCreatePostSchema } from "./create-post/schema.js";
+import { deletePost } from "./delete-post/index.js";
+import { fetchFeedPosts } from "./feed-posts/index.js";
+import { likePost } from "./like-post.js";
+import { repost } from "./repost.js";
 
 export const postController = {
   createPost: async (c: Context<Env>) => {

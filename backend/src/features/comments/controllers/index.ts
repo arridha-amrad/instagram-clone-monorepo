@@ -1,8 +1,8 @@
-import { errorHandler } from "@/features/utils";
-import { Env } from "@/types";
+import { errorHandler } from "@/features/utils.js";
+import { Env } from "@/types.js";
 import { Context } from "hono";
-import createComment from "./create-comment";
-import { deleteComment } from "./delete-comment";
+import createComment from "./create-comment.js";
+import { deleteComment } from "./delete-comment.js";
 
 export const commentsControllers = {
   createComment: async (c: Context<Env>) => {

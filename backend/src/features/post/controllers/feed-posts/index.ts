@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/generated/prisma/client";
+import { PrismaClient } from "@/generated/prisma/client.js";
 
 export const fetchFeedPosts = async (prisma: PrismaClient, userId?: string) => {
   const posts = await prisma.concretePost.findMany({

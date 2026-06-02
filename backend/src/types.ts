@@ -1,5 +1,5 @@
-import type { PrismaClient } from "./generated/prisma/client";
-import { auth } from "./lib/auth";
+import { PrismaClient } from "./generated/prisma/client.js";
+import { auth } from "./lib/auth.js";
 
 export type Env = {
   Variables: {

@@ -1,5 +1,5 @@
 import { Context } from "hono";
-import { createSignature, removeFile } from "@/lib/cloudinaryFn";
+import { createSignature, removeFile } from "@/lib/cloudinaryFn.js";
 
 export const fileUploadController = {
   createSignature: async (c: Context) => {

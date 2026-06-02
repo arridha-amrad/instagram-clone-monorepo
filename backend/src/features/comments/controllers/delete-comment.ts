@@ -1,5 +1,5 @@
-import { MyApiError } from "@/errors";
-import { PrismaClient } from "@/generated/prisma/client";
+import { MyApiError } from "@/errors.js";
+import { PrismaClient } from "@/generated/prisma/client.js";
 
 export const deleteComment = async (
   prisma: PrismaClient,

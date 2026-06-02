@@ -1,5 +1,5 @@
-import { PrismaClient } from "@/generated/prisma/client";
-import { removeFile } from "@/lib/cloudinaryFn";
+import { PrismaClient } from "@/generated/prisma/client.js";
+import { removeFile } from "@/lib/cloudinaryFn.js";
 
 export const deletePost = async (
   prisma: PrismaClient,

@@ -1,14 +1,14 @@
-import { Env } from "@/types";
+import { Env } from "@/types.js";
 import { Context } from "hono";
-import searchUser from "./search-user";
-import { MyApiError } from "@/errors";
-import { errorHandler } from "../../utils";
-import addToSearchHistory from "./add-to-search-history";
-import fetchSearchHistories from "./fetch-search-histories";
+import searchUser from "./search-user.js";
+import { MyApiError } from "@/errors.js";
+import { errorHandler } from "../../utils.js";
+import addToSearchHistory from "./add-to-search-history.js";
+import fetchSearchHistories from "./fetch-search-histories.js";
 import {
   deleteAllSearchHistories,
   deleteSearchHistory,
-} from "./delete-search-histories";
+} from "./delete-search-histories.js";
 
 export const usersControllers = {
   searchUser: async (c: Context<Env>) => {

@@ -2,7 +2,7 @@ import "dotenv/config";
 import type { Context, Next } from "hono";
 import { PrismaClient } from "../generated/prisma/client.js";
 import { withAccelerate } from "@prisma/extension-accelerate";
-import { env } from "@/config/env";
+import { env } from "../config/env.js";
 
 const databaseUrl = env.DATABASE_URL_ACC;
 

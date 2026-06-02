@@ -1,5 +1,5 @@
-import { AspectRatio, PrismaClient } from "@/generated/prisma/client";
-import { TCreatePostSchema } from "./schema";
+import { AspectRatio, PrismaClient } from "@/generated/prisma/client.js";
+import { TCreatePostSchema } from "./schema.js";
 
 export const mapStringToAspectRatio = (input: string): AspectRatio => {
   // 1. Bersihkan spasi tambahan agar "1   /   1" tetap terbaca "1/1"
