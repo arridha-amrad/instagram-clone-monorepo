@@ -1,0 +1,35 @@
+{
+  "name": "@instagram/api",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "db:m": "bunx --bun prisma migrate dev",
+    "db:g": "bunx --bun prisma generate",
+    "db:p": "bunx --bun prisma db push",
+    "db:seed": "bunx --bun prisma db seed",
+    "db:s": "bunx --bun prisma studio",
+    "seed": "bunx prisma db seed",
+    "build": "bun install",
+    "postinstall": "bunx --bun prisma generate"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "@prisma/extension-accelerate": "^3.0.1",
+    "better-auth": "^1.6.11",
+    "cloudinary": "^2.10.0",
+    "dotenv": "^17.4.2",
+    "hono": "^4.12.23",
+    "pg": "^8.21.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/pg": "^8.20.0",
+    "prisma": "^7.8.0",
+    "tsx": "^4.22.3"
+  },
+  "type": "module",
+  "prisma": {
+    "seed": "bun prisma/seed.ts"
+  }
+}

@@ -1,0 +1,56 @@
+# ==========================================
+# Dependency Directories
+# ==========================================
+node_modules/
+.bun/
+
+# ==========================================
+# Prisma Configuration & Generated Artifacts
+# ==========================================
+.env
+.env.*
+!.env.example
+/src/generated/prisma/
+
+# ==========================================
+# Build & Output Directories
+# ==========================================
+dist/
+build/
+.output/
+
+# ==========================================
+# Editor & IDE Specific Settings
+# ==========================================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# ==========================================
+# macOS System Files (Sangat Penting untuk Mac)
+# ==========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.Trashes
+
+# ==========================================
+# Logs & Diagnostics
+# ==========================================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun-debug.log*
+.vercel
