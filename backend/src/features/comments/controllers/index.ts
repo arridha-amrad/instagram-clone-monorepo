@@ -1,5 +1,5 @@
-import { errorHandler } from "@/features/utils.js";
-import { Env } from "@/types.js";
+import { errorHandler } from "#/features/utils.js";
+import { Env } from "#/types.js";
 import { Context } from "hono";
 import createComment from "./create-comment.js";
 import { deleteComment } from "./delete-comment.js";

@@ -1,7 +1,7 @@
-import { Env } from "@/types.js";
+import { Env } from "#/types.js";
 import { Context } from "hono";
 import searchUser from "./search-user.js";
-import { MyApiError } from "@/errors.js";
+import { MyApiError } from "#/errors.js";
 import { errorHandler } from "../../utils.js";
 import addToSearchHistory from "./add-to-search-history.js";
 import fetchSearchHistories from "./fetch-search-histories.js";

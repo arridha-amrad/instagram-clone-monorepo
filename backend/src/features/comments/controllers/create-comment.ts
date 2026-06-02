@@ -1,5 +1,5 @@
-import { MyApiError } from "@/errors.js";
-import { PrismaClient } from "@/generated/prisma/client.js";
+import { MyApiError } from "#/errors.js";
+import { PrismaClient } from "#/generated/prisma/client.js";
 
 export default async function createComment(
   prisma: PrismaClient,

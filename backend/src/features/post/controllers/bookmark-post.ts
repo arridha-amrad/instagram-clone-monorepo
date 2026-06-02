@@ -1,5 +1,5 @@
-import { MyApiError } from "@/errors.js";
-import { PrismaClient } from "@/generated/prisma/client.js";
+import { MyApiError } from "#/errors.js";
+import { PrismaClient } from "#/generated/prisma/client.js";
 
 export async function bookmarkPost(
   prisma: PrismaClient,

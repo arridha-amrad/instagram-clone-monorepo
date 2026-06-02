@@ -1,4 +1,4 @@
-import { Prisma } from "@/generated/prisma/client.js";
+import { Prisma } from "#/generated/prisma/client.js";
 import z from "zod";
 
 export const MAX_CAPTION_LENGTH = 200;

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/generated/prisma/client.js";
+import { PrismaClient } from "#/generated/prisma/client.js";
 
 export default async function searchUser(prisma: PrismaClient, query: string) {
   try {

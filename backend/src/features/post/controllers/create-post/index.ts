@@ -1,4 +1,4 @@
-import { AspectRatio, PrismaClient } from "@/generated/prisma/client.js";
+import { AspectRatio, PrismaClient } from "#/generated/prisma/client.js";
 import { TCreatePostSchema } from "./schema.js";
 
 export const mapStringToAspectRatio = (input: string): AspectRatio => {
