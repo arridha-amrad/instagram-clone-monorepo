@@ -2,7 +2,7 @@ import z from "zod";
 
 export const pwdSchema = z
   .string()
-  .min(8, "Password must be at least 8 characters")
+  .min(3, "Password must be at least 3 characters")
   .regex(/[0-9]/, "Password must contain at least one number")
   .regex(
     /[^a-zA-Z0-9]/,

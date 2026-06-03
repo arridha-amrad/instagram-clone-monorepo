@@ -39,9 +39,9 @@ export function LoginForm() {
   const navigate = useNavigate();
 
   const onSubmit = async (data: TLoginSchema) => {
-    await authClient.signIn.email(
+    await authClient.signIn.username(
       {
-        email: data.identifier,
+        username: data.identifier,
         password: data.password,
       },
       {
@@ -63,11 +63,6 @@ export function LoginForm() {
           <CardDescription>
             Login with your Github or Google account
           </CardDescription>
-          {authError && (
-            <div role="alert" className="text-destructive text-sm">
-              {authError}
-            </div>
-          )}
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -79,17 +74,24 @@ export function LoginForm() {
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
               </FieldSeparator>
+              {authError && (
+                <div role="alert" className="text-destructive text-center text-sm">
+                  {authError}
+                </div>
+              )}
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
                   id="email"
-                  type="email"
+                  type="text"
                   placeholder="m@example.com"
                   {...register("identifier")}
                 />
-                <FieldError
-                  errors={[{ message: errors.identifier?.message }]}
-                />
+                {errors.identifier?.message && (
+                  <FieldError
+                    errors={[{ message: errors.identifier.message }]}
+                  />
+                )}
               </Field>
               <Field>
                 <div className="flex items-center">
@@ -101,7 +103,12 @@ export function LoginForm() {
                     Forgot your password?
                   </Link>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" {...register("password")} />
+                {errors.password?.message && (
+                  <FieldError
+                    errors={[{ message: errors.password.message }]}
+                  />
+                )}
               </Field>
               <Field>
                 <Button type="submit">

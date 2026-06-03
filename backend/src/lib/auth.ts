@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma.js";
 import { username } from "better-auth/plugins";
 import { env } from "../config/env.js";
+import { sendEmail } from "./mailer.js";
 
 export const auth = betterAuth({
   baseURL: env.BACKEND_URL,
@@ -19,6 +20,20 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
+    minPasswordLength: 3,
+  },
+  emailVerification: {
+    expiresIn: 3600*2,
+    sendOnSignUp: true,
+		autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url, token }) => {
+			sendEmail({
+        html: `<p>Please click this link to verify your account : ${url}</p>`,
+        subject: "Email verification",
+        to: user.email
+      })
+		},
   },
   socialProviders: {
     google: {

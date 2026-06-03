@@ -10,6 +10,7 @@ const getEnvVar = (key: string, required = true): string => {
 
 export const env = {
   VITE_SERVER_BASE_URL: getEnvVar("VITE_BACKEND_URL"),
+  VITE_FRONTEND_URL: getEnvVar("VITE_FRONTEND_URL"),
 } as const;
 
 const vercelHost = withRelatedProject({

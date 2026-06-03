@@ -18,5 +18,7 @@ export const env = {
   DATABASE_URL_ACC: getEnvVar("DATABASE_URL_ACC"),
   GOOGLE_CLIENT_ID: getEnvVar("GOOGLE_CLIENT_ID"),
   GOOGLE_CLIENT_SECRET: getEnvVar("GOOGLE_CLIENT_SECRET"),
+  GOOGLE_USER: getEnvVar("GOOGLE_USER"),
+  GOOGLE_REF_TOKEN: getEnvVar("GOOGLE_REF_TOKEN"),
   PORT: getEnvVar("PORT"),
 } as const;
