@@ -19,7 +19,7 @@ app.use("*", logger());
 app.use(
   "/api/*",
   cors({
-    origin: env.ORIGIN_BASE_URL!,
+    origin: [env.ORIGIN_BASE_URL!, "http://localhost:3000"],
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["POST", "GET", "OPTIONS", "DELETE", "PUT"],
     exposeHeaders: ["Content-Length"],

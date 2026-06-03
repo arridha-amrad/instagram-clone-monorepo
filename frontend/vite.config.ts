@@ -14,17 +14,18 @@ const config = defineConfig({
     tanstackRouter({ target: "react", autoCodeSplitting: true }),
     viteReact(),
   ],
-  server: {
-    port: 3000,
-    proxy: {
-      // Mengarahkan localhost:3000/api/* ke localhost:5000/api/* saat dev
-      "/api": {
-        target: "http://localhost:5000",
-        changeOrigin: true,
-        secure: false,
-      },
-    },
-  },
+  // server: {
+  //   port: 3000,
+  //   proxy: {
+  //     // Mengarahkan localhost:3000/api/* ke localhost:5000/api/* saat dev
+  //     "/api": {
+  //       target: "http://localhost:5000",
+  //       changeOrigin: true,
+  //       secure: false,
+  //       rewrite: (path) => path.replace(/^\/api/, ""),
+  //     },
+  //   },
+  // },
 });
 
 export default config;
