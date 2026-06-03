@@ -5,7 +5,6 @@ import type {
 import { privateAxios } from "#/lib/axios";
 
 export const fetchFeedPosts = async () => {
-  await new Promise((res) => setTimeout(res, 5000))
   const { data } = await privateAxios.get(`/posts/feed`);
   const posts = data.data as any[];
 

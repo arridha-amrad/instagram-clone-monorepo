@@ -1,16 +1,15 @@
 import { Lock, Send } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+
 import { Button } from "./ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
+import type { TSuggestedUsers } from "#/features/users/suggested-users/api";
+import Avatar from "./avatar";
 
-const user = {
-  username: "garfield",
-  name: "Garfield",
-  email: "m@example.com",
-  avatar: "https://github.com/shadcn.png",
-};
+type Props = {
+  user: TSuggestedUsers
+}
 
-export default function UsernameHoverCard() {
+export default function UsernameHoverCard({user}: Props) {
   return (
     <HoverCard openDelay={500} closeDelay={100}>
       <HoverCardTrigger asChild>
@@ -19,10 +18,7 @@ export default function UsernameHoverCard() {
       <HoverCardContent className="w-xs rounded-md border" asChild>
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <Avatar className="h-8 w-8 rounded-lg">
-              <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-            </Avatar>
+            <Avatar src={user.image ?? undefined}/>
             <div>
               <p className="font-extrabold">{user.username}</p>
               <p className="text-xs text-muted-foreground">{user.name}</p>

@@ -1,15 +1,21 @@
+import Avatar from "#/components/avatar";
 import HomeFooter from "#/components/footers/home-footer";
-import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { Button } from "#/components/ui/button";
 import UsernameHoverCard from "#/components/username-hover-card";
+import { useQuery } from "@tanstack/react-query";
+import { suggestedUsersQueryOptions } from "./query";
+import type { TSuggestedUsers } from "./api";
 
-const user = {
-  name: "shadcn",
-  email: "m@example.com",
-  avatar: "https://github.com/shadcn.png",
-};
+type Props = {
+  users: TSuggestedUsers[]
+}
 
-export default function SuggestedUsers() {
+export default function SuggestedUsers({users}: Props) {
+  const { data: suggestedUsers } = useQuery({
+    ...suggestedUsersQueryOptions(),
+    initialData: users
+  })
+
   return (
     <div className="w-full space-y-6">
       <div className="px-1">
@@ -19,17 +25,14 @@ export default function SuggestedUsers() {
       </div>
 
       <div className="space-y-2">
-        {[...Array(5)].map((_, i) => (
+        {suggestedUsers?.map((user) => (
           <div
-            key={i}
+            key={user.id}
             className="flex items-center gap-2 rounded-md px-1 py-1.5 text-left text-sm"
           >
-            <Avatar className="lg:size-10">
-              <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-            </Avatar>
+            <Avatar src={user.image ?? ""} />
             <div className="grid flex-1 space-y-1 text-left text-sm">
-              <UsernameHoverCard />
+              <UsernameHoverCard user={user} />
               <span className="truncate text-xs text-muted-foreground">
                 Recommended for you
               </span>

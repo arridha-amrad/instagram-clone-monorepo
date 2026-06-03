@@ -1,14 +1,15 @@
 import { Env } from "#/types.js";
 import { Context } from "hono";
-import searchUser from "./search-user.js";
+import searchUser from "./search-user/search-user.js";
 import { MyApiError } from "#/errors.js";
 import { errorHandler } from "../../utils.js";
-import addToSearchHistory from "./add-to-search-history.js";
-import fetchSearchHistories from "./fetch-search-histories.js";
+import addToSearchHistory from "./search-user/add-to-search-history.js";
+import fetchSearchHistories from "./search-user/fetch-search-histories.js";
 import {
   deleteAllSearchHistories,
   deleteSearchHistory,
-} from "./delete-search-histories.js";
+} from "./search-user/delete-search-histories.js";
+import fetchSuggestedUsers from "./fetch-suggested-users.js";
 
 export const usersControllers = {
   searchUser: async (c: Context<Env>) => {
@@ -69,6 +70,17 @@ export const usersControllers = {
       if (!user) throw new MyApiError("unauthorized", 401);
       const result = await deleteAllSearchHistories(prisma, user.id);
       return c.json({ success: true, data: result }, 200);
+    } catch (err) {
+      return errorHandler(err, c);
+    }
+  },
+  fetchSuggestedUsers: async (c: Context<Env>) => {
+    try {
+      const prisma = c.get("prisma");
+      const user = c.get("user");
+      if (!user) throw new MyApiError("unauthorized", 401);
+      const users = await fetchSuggestedUsers(prisma, user.id);
+      return c.json({ success: true, data: users });
     } catch (err) {
       return errorHandler(err, c);
     }

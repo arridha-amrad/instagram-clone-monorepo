@@ -65,10 +65,10 @@ export const SidebarContent = () => {
       </CreatePostContextProvider>
 
       <SidebarLink
-        to="/"
-        // params={{
-        //   username: user?.user.username ?? "",
-        // }}
+        to="/u/$username"
+        params={{
+          username: user?.data?.user.username ?? "",
+        }}
         icon={<UserIcon />}
         filledIcon={<UserIcon />}
         label="Profile"

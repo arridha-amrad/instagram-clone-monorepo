@@ -2,9 +2,17 @@ import { useQuery } from "@tanstack/react-query";
 import FeedPost from "./feed-post";
 import { AnimatePresence, motion } from "motion/react";
 import { feedPostsQueryOptions } from "./query";
+import type { TFeedPost } from "./api";
 
-export default function FeedPosts() {
-  const { data: feedPosts, isLoading } = useQuery(feedPostsQueryOptions());
+type Props = {
+  posts: TFeedPost[]
+}
+
+export default function FeedPosts({posts}: Props) {
+  const { data: feedPosts, isLoading } = useQuery({
+    ...feedPostsQueryOptions(),
+    initialData: posts
+  });
 
   if (isLoading) {
     return (

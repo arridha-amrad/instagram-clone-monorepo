@@ -3,6 +3,7 @@ import { Sidebar } from "#/components/sidebar";
 import FeedPosts from "#/features/posts/feed/feed-posts";
 import { feedPostsQueryOptions } from "#/features/posts/feed/query";
 import SuggestedUsers from "#/features/users/suggested-users/list";
+import { suggestedUsersQueryOptions } from "#/features/users/suggested-users/query";
 import { authClient } from "#/lib/auth-client";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
@@ -19,23 +20,31 @@ export const Route = createFileRoute("/")({
     return { session: session.data };
   },
   loader: async ({ context: { queryClient } }) => {
-    queryClient.ensureQueryData(feedPostsQueryOptions());
+    const [posts, users] = await Promise.all([
+      queryClient.ensureQueryData(feedPostsQueryOptions()),
+      queryClient.ensureQueryData(suggestedUsersQueryOptions())
+    ])
+    return {
+      posts,
+      users
+    }
   },
   component: Home,
 });
 
 function Home() {
   const { session } = Route.useRouteContext();
+  const { posts, users } = Route.useLoaderData()
   return (
     <div className="mx-auto flex min-h-svh w-full max-w-300 gap-x-4">
       {session && <Sidebar />}
       <div className="flex-1 space-y-4 p-4">
         <VolumeProvider>
-          <FeedPosts />
+          <FeedPosts posts={posts!} />
         </VolumeProvider>
       </div>
       <div className="sticky top-0 hidden h-svh w-xs p-4 lg:block">
-        <SuggestedUsers />
+        <SuggestedUsers users={users!} />
       </div>
     </div>
   );
