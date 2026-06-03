@@ -17,7 +17,7 @@ const app = new Hono<Env>();
 app.use("*", logger());
 
 app.use(
-  "/api/*",
+  "*",
   cors({
     origin: [env.ORIGIN_BASE_URL!, "http://localhost:3000"],
     allowHeaders: ["Content-Type", "Authorization"],
