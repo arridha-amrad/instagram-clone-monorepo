@@ -3,7 +3,6 @@ import "dotenv/config";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { env } from "process";
 import commentRoutes from "./features/comments/route.js";
 import fileRoutes from "./features/file-uploads/routes.js";
 import postRoutes from "./features/post/routes.js";
@@ -11,6 +10,7 @@ import { auth } from "./lib/auth.js";
 import withPrisma from "./lib/prisma.js";
 import { Env } from "./types.js";
 import usersRoutes from "./features/users/routes.js";
+import { env } from "./config/env.js";
 
 const app = new Hono<Env>();
 
@@ -19,7 +19,7 @@ app.use("*", logger());
 app.use(
   "*",
   cors({
-    origin: [env.ORIGIN_BASE_URL!, "http://localhost:3000"],
+    origin: [env.FRONTEND_URL!, "http://localhost:3000"],
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["POST", "GET", "OPTIONS", "DELETE", "PUT"],
     exposeHeaders: ["Content-Length"],

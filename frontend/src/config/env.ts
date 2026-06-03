@@ -1,3 +1,5 @@
+import { withRelatedProject } from "@vercel/related-projects";
+
 const getEnvVar = (key: string, required = true): string => {
   const value = import.meta.env[key];
   if (required && !value) {
@@ -7,5 +9,14 @@ const getEnvVar = (key: string, required = true): string => {
 };
 
 export const env = {
-  VITE_SERVER_BASE_URL: getEnvVar("VITE_SERVER_BASE_URL"),
+  VITE_SERVER_BASE_URL: getEnvVar("VITE_BACKEND_URL"),
 } as const;
+
+const vercelHost = withRelatedProject({
+  projectName: "instagram-clone-monorepo-be",
+  defaultHost: import.meta.env.VITE_BACKEND_URL as string,
+});
+
+export const serverHost = import.meta.env.DEV
+  ? (import.meta.env.VITE_BACKEND_URL as string)
+  : vercelHost;

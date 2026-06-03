@@ -4,8 +4,8 @@ import { Button } from "./ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 
 const user = {
-  username: "diyetisyen.hale",
-  name: "Zeynep Hale Kocaoglu",
+  username: "garfield",
+  name: "Garfield",
   email: "m@example.com",
   avatar: "https://github.com/shadcn.png",
 };

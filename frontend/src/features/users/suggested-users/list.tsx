@@ -34,7 +34,7 @@ export default function SuggestedUsers() {
                 Recommended for you
               </span>
             </div>
-            <Button variant={"ghost"} color="primary" size={"xs"}>
+            <Button variant={"ghost"} className="text-primary" size={"xs"}>
               Follow
             </Button>
           </div>

@@ -5,8 +5,8 @@ import { username } from "better-auth/plugins";
 import { env } from "../config/env.js";
 
 export const auth = betterAuth({
-  baseURL: env.APP_BASE_URL,
-  trustedOrigins: [env.ORIGIN_BASE_URL],
+  baseURL: env.BACKEND_URL,
+  trustedOrigins: [env.FRONTEND_URL],
   session: {
     cookieCache: {
       enabled: true,

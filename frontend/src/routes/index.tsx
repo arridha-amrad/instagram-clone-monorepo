@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
     return { session: session.data };
   },
   loader: async ({ context: { queryClient } }) => {
-    await queryClient.ensureQueryData(feedPostsQueryOptions());
+    queryClient.ensureQueryData(feedPostsQueryOptions());
   },
   component: Home,
 });
@@ -29,12 +29,14 @@ function Home() {
   return (
     <div className="mx-auto flex min-h-svh w-full max-w-300 gap-x-4">
       {session && <Sidebar />}
-      <VolumeProvider>
-        <FeedPosts />
-        <div className="sticky top-0 hidden h-svh w-xs p-4 lg:block">
-          <SuggestedUsers />
-        </div>
-      </VolumeProvider>
+      <div className="flex-1 space-y-4 p-4">
+        <VolumeProvider>
+          <FeedPosts />
+        </VolumeProvider>
+      </div>
+      <div className="sticky top-0 hidden h-svh w-xs p-4 lg:block">
+        <SuggestedUsers />
+      </div>
     </div>
   );
 }
