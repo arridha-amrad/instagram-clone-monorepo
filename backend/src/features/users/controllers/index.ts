@@ -10,6 +10,7 @@ import {
   deleteSearchHistory,
 } from "./search-user/delete-search-histories.js";
 import fetchSuggestedUsers from "./fetch-suggested-users.js";
+import follow from "./follow.js";
 
 export const usersControllers = {
   searchUser: async (c: Context<Env>) => {
@@ -81,6 +82,20 @@ export const usersControllers = {
       if (!user) throw new MyApiError("unauthorized", 401);
       const users = await fetchSuggestedUsers(prisma, user.id);
       return c.json({ success: true, data: users });
+    } catch (err) {
+      return errorHandler(err, c);
+    }
+  },
+  follow: async (c: Context<Env>) => {
+    try {
+      const prisma = c.get("prisma");
+      const user = c.get("user");
+      const { targetId } = (await c.req.json()) as { targetId: string };
+      console.log({targetId});
+      if (!targetId || !prisma || !user)
+        throw new MyApiError("missing params", 400);
+      const result = await follow(prisma, user.id, targetId);
+      return c.json({ success: true, data: result });
     } catch (err) {
       return errorHandler(err, c);
     }

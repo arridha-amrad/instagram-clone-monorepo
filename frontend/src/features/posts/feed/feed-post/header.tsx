@@ -10,7 +10,7 @@ type Props = {
 export default function FeedPostHeader({ feedPost, children }: Props) {
   const allAvatars = useMemo(() => {
     return [
-      feedPost.user?.image,
+      feedPost.user?.image ?? "/default.jpg",
       ...feedPost.collaborators.map((c) => c.user?.image),
     ].filter((v): v is string => typeof v === "string");
   }, [feedPost.id]);

@@ -25,10 +25,9 @@ export default function Carousel({ feedPost }: Props) {
           <div
             className={cn(
               "w-full overflow-hidden",
-              `aspect-[${feedPost.aspectRatio}]`,
             )}
             style={{
-              aspectRatio: feedPost.aspectRatio,
+              aspectRatio: feedPost.aspectRatio === "RATIO_4_5" ? "4 / 5" : "1 / 1",
               transform: "translate3d(0, 0, 0)",
               flex: "0 0 100%",
               minWidth: 0,

@@ -13,19 +13,22 @@ export const useRepostMutation = () => {
         throw err;
       }
     },
-    onMutate: async () => {
+    onMutate: async (postId) => {
       await qc.cancelQueries({ queryKey: ["feed-posts"] });
       const previousPosts = qc.getQueryData<TFeedPost[]>(["feed-posts"]);
       qc.setQueryData(["feed-posts"], (old: TFeedPost[] | undefined) => {
         if (!old) return [];
-        return old.map((p) => ({
+        return old.map((p) => {
+          if(p.id !== postId) return p
+          return {
           ...p,
           isRepost: !p.isRepost,
           _count: {
             ...p._count,
             reposts: p.isRepost ? p._count.reposts - 1 : p._count.reposts + 1,
           },
-        }));
+        }
+        });
       });
       return { previousPosts };
     },

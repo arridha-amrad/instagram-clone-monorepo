@@ -1,20 +1,18 @@
-import Avatar from "#/components/avatar";
 import HomeFooter from "#/components/footers/home-footer";
-import { Button } from "#/components/ui/button";
-import UsernameHoverCard from "#/components/username-hover-card";
 import { useQuery } from "@tanstack/react-query";
-import { suggestedUsersQueryOptions } from "./query";
 import type { TSuggestedUsers } from "./api";
+import { suggestedUsersQueryOptions } from "./query";
+import SuggestedUser from "./suggested-user";
 
 type Props = {
-  users: TSuggestedUsers[]
-}
+  users: TSuggestedUsers[];
+};
 
-export default function SuggestedUsers({users}: Props) {
+export default function SuggestedUsers({ users }: Props) {
   const { data: suggestedUsers } = useQuery({
     ...suggestedUsersQueryOptions(),
-    initialData: users
-  })
+    initialData: users,
+  });
 
   return (
     <div className="w-full space-y-6">
@@ -23,24 +21,16 @@ export default function SuggestedUsers({users}: Props) {
           Suggested users
         </h5>
       </div>
-
       <div className="space-y-2">
         {suggestedUsers?.map((user) => (
-          <div
+          <SuggestedUser
             key={user.id}
-            className="flex items-center gap-2 rounded-md px-1 py-1.5 text-left text-sm"
-          >
-            <Avatar src={user.image ?? ""} />
-            <div className="grid flex-1 space-y-1 text-left text-sm">
-              <UsernameHoverCard user={user} />
-              <span className="truncate text-xs text-muted-foreground">
-                Recommended for you
-              </span>
-            </div>
-            <Button variant={"ghost"} className="text-primary" size={"xs"}>
-              Follow
-            </Button>
-          </div>
+            isFollow={user?.isFollow}
+            image={user.image ?? ""}
+            name={user.name}
+            userId={user.id}
+            username={user.username}
+          />
         ))}
       </div>
       <HomeFooter />

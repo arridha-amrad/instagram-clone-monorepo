@@ -45,10 +45,30 @@ model Users {
   bookmarks        Bookmark[]
   searchHistories  SearchHistory[]  @relation("UserSearches")
   searchedByOthers SearchHistory[]  @relation("TargetSearches")
+  // Relasi ke tabel Follow
+  // Orang-orang yang memfollow user ini (Followers)
+  followers Follow[] @relation("UserFollowers")
+  
+  // Orang-orang yang difollow oleh user ini (Following)
+  following Follow[] @relation("UserFollowing")
 
   @@unique([email])
   @@unique([username])
   @@map("users")
+}
+
+model Follow {
+  followerId String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower  Users @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following Users @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId]) // Compound Primary Key agar tidak ada duplikasi follow yang sama
+  @@index([followerId])
+  @@index([followingId])
+  @@map("follows")
 }
 
 model Sessions {

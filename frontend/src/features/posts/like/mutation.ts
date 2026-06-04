@@ -13,21 +13,24 @@ export const useLikePostMutation = () => {
         throw err;
       }
     },
-    onMutate: async () => {
+    onMutate: async (postId: string) => {
       await qc.cancelQueries({ queryKey: ["feed-posts"] });
       const previousPosts = qc.getQueryData<TFeedPost[]>(["feed-posts"]);
       qc.setQueryData(["feed-posts"], (old: TFeedPost[] | undefined) => {
         if (!old) return [];
-        return old.map((p) => ({
-          ...p,
-          isLiked: !p.isLiked,
-          _count: {
-            ...p._count,
-            postLikes: p.isLiked
-              ? p._count.postLikes - 1
-              : p._count.postLikes + 1,
-          },
-        }));
+        return old.map((p) => {
+          if (p.id !== postId) return p;
+          return {
+            ...p,
+            isLiked: !p.isLiked,
+            _count: {
+              ...p._count,
+              postLikes: p.isLiked
+                ? p._count.postLikes - 1
+                : p._count.postLikes + 1,
+            },
+          };
+        });
       });
       return { previousPosts };
     },

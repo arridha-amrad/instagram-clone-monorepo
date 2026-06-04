@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/combobox";
 import { Field, FieldLabel } from "@/components/ui/field";
 import type { TCreatePostFormSchema } from "../../schema";
+import { searchUser } from "../../api";
+import toast from "react-hot-toast";
 
 type Props = {
   field: ControllerRenderProps<TCreatePostFormSchema, "collaborators">;
@@ -25,44 +27,33 @@ type Props = {
 
 export default function CollaboratorsInput({ field }: Props) {
   const [users, setUsers] = useState<Array<UserMinimal>>([]);
-
   const anchor = useComboboxAnchor();
-
   const collaborators = useMemo(
     () => (field.value || []) as Array<UserMinimal>,
     [field.value],
   );
-
   const inputRef = useRef<HTMLInputElement>(null);
-
   const [query, setQuery] = useState("");
   const [debouncedQuery] = useDebounce(query, 500);
-
   const [isLoading, setIsLoading] = useState(false);
-
-  // const search = useServerFn(searchUser);
 
   useEffect(() => {
     const t = setTimeout(() => {
       if (debouncedQuery.trim() !== "") {
         setIsLoading(true);
-        // search({ data: { limit: 5, query: debouncedQuery } })
-        //   .then((data: Array<UserMinimal>) => {
-        //     const filteredUsers = data.filter(
-        //       (user) =>
-        //         !collaborators.some((u: UserMinimal) => u.id === user.id),
-        //     );
-        //     setUsers(filteredUsers);
-        //   })
-        //   .catch((err) => {
-        //     toast.error(err instanceof Error ? err.message : "Error");
-        //   })
-        //   .finally(() => {
-        //     setIsLoading(false);
-        //   });
+        searchUser(debouncedQuery)
+          .then((data: Array<UserMinimal>) => {
+            const filteredUsers = data.filter(
+              (user) => !collaborators.some((u) => u.id === user.id),
+            );
+            setUsers(filteredUsers);
+          })
+          .catch((err) => {
+            toast.error(err instanceof Error ? err.message : "Error");
+          })
+          .finally(() => setIsLoading(false));
       }
     }, 0);
-
     return () => clearTimeout(t);
   }, [debouncedQuery, collaborators]);
 

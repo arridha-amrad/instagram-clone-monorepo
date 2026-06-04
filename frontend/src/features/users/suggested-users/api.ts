@@ -10,4 +10,4 @@ export type TSuggestedUsers = {
   name: string;
   username: string;
   image: string | null;
-};
+} & { isFollow?: boolean };

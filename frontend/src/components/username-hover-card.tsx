@@ -2,26 +2,28 @@ import { Lock, Send } from "lucide-react";
 
 import { Button } from "./ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
-import type { TSuggestedUsers } from "#/features/users/suggested-users/api";
 import Avatar from "./avatar";
 
 type Props = {
-  user: TSuggestedUsers
+  username: string
+  name: string
+  image: string
+  userId: string
 }
 
-export default function UsernameHoverCard({user}: Props) {
+export default function UsernameHoverCard({image, name, username}: Props) {
   return (
     <HoverCard openDelay={500} closeDelay={100}>
       <HoverCardTrigger asChild>
-        <span className="truncate font-medium">{user.username}</span>
+        <span className="truncate font-medium">{username}</span>
       </HoverCardTrigger>
       <HoverCardContent className="w-xs rounded-md border" asChild>
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <Avatar src={user.image ?? undefined}/>
+            <Avatar src={image}/>
             <div>
-              <p className="font-extrabold">{user.username}</p>
-              <p className="text-xs text-muted-foreground">{user.name}</p>
+              <p className="font-extrabold">{username}</p>
+              <p className="text-xs text-muted-foreground">{name}</p>
             </div>
           </div>
           <div className="flex items-center justify-evenly text-xs">
@@ -40,8 +42,8 @@ export default function UsernameHoverCard({user}: Props) {
           </div>
 
           <div className="grid grid-cols-3 gap-0.5">
-            {[...Array(3)].map((v) => (
-              <div key={v} className="aspect-square bg-muted"></div>
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="aspect-square bg-muted"></div>
             ))}
           </div>
 

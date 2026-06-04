@@ -1,16 +1,13 @@
-import { env } from "#/config/env";
+import { serverHost } from "#/config/env";
 import { privateAxios } from "#/lib/axios";
 import axios from "axios";
 
 export const searchUsersApi = async (searchKey: string) => {
-  const { data } = await axios.get(
-    `${env.VITE_SERVER_BASE_URL}/api/users/search`,
-    {
-      params: {
-        q: searchKey,
-      },
+  const { data } = await axios.get(`${serverHost}/api/users/search`, {
+    params: {
+      q: searchKey,
     },
-  );
+  });
   return data.data as TSearchUser[];
 };
 

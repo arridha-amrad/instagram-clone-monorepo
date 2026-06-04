@@ -13,12 +13,16 @@ export const useBookmarkPostMutation = () => {
         throw err;
       }
     },
-    onMutate: async () => {
+    onMutate: async (postId) => {
       await qc.cancelQueries({ queryKey: ["feed-posts"] });
       const prevPosts = qc.getQueryData<TFeedPost[]>(["feed-posts"]);
       qc.setQueryData(["feed-posts"], (old: TFeedPost[] | undefined) => {
         if (!old) return [];
-        return old.map((p) => ({
+        return old.map((p) => {
+          if(p.id !== postId) {
+            return p
+          }
+          return {
           ...p,
           isBookmarked: !p.isBookmarked,
           _count: {
@@ -27,7 +31,8 @@ export const useBookmarkPostMutation = () => {
               ? p._count.bookmarks - 1
               : p._count.bookmarks + 1,
           },
-        }));
+        }
+        });
       });
       return { prevPosts };
     },

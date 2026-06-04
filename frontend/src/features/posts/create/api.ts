@@ -1,5 +1,5 @@
 import axios from "axios";
-import { env } from "@/config/env";
+import { serverHost } from "@/config/env";
 import type { TCreatePostSchema } from "./schema";
 import { privateAxios } from "#/lib/axios";
 
@@ -17,7 +17,7 @@ export type SearchResult = {
 };
 
 export const getCloudinaryUploadSignature = async (folderName: string) => {
-  const { data } = await axios.post(`/api/file`, {
+  const { data } = await axios.post(`${serverHost}/api/file`, {
     folder: folderName,
   });
   console.log({ signature: data.data });
@@ -31,7 +31,7 @@ export const createPost = async (data: TCreatePostSchema) => {
 };
 
 export const searchUser = async (searchKey: string) => {
-  const result = await axios.get(`/api/users/search`, {
+  const result = await axios.get(`${serverHost}/api/users/search`, {
     params: {
       q: searchKey,
     },

@@ -1,15 +1,15 @@
-import type {
-  AspectRatio,
-  MediaType,
-} from "../create/components/create-post-context";
 import { privateAxios } from "#/lib/axios";
+import type {
+  MediaType
+} from "../create/components/create-post-context";
 
 export const fetchFeedPosts = async () => {
   const { data } = await privateAxios.get(`/posts/feed`);
   const posts = data.data as any[];
-
   return posts.map((p) => ({ ...p, comments: [] })) as TFeedPost[];
 };
+
+type TAspectRatio = "RATIO_4_5" | "RATIO_1_1";
 
 export type TFeedPost = {
   isLiked: boolean;
@@ -54,7 +54,7 @@ export type TFeedPost = {
   location: string | null;
   createdAt: Date;
   updatedAt: Date;
-  aspectRatio: AspectRatio;
+  aspectRatio: TAspectRatio;
   userId: string;
 } & {
   comments: {
