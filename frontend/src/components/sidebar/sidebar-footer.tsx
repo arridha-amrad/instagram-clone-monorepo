@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
 import { authQueryOptions } from "#/features/auth/query";
+import { useTheme } from "#/context/theme-context";
 
 export const SidebarFooter = () => {
   // const { data } = useAuthQuery();
@@ -65,17 +66,17 @@ export const SidebarFooter = () => {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {/* <DropdownMenuItem
+          <DropdownMenuItem
             onClick={() =>
               navigate({
-                to: "/$username",
-                params: { username: data?.user.username ?? "" },
+                to: "/u/$username",
+                params: { username: data?.data?.user.username ?? "" },
               })
             }
           >
             <User />
             Profile
-          </DropdownMenuItem> */}
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <Settings />
             Settings
@@ -100,6 +101,7 @@ export const SidebarFooter = () => {
 };
 
 const DropdownSubMenuTheme = () => {
+  const { setTheme } = useTheme();
   return (
     <DropdownMenuSub>
       <DropdownMenuSubTrigger>
@@ -108,15 +110,15 @@ const DropdownSubMenuTheme = () => {
       </DropdownMenuSubTrigger>
       <DropdownMenuPortal>
         <DropdownMenuSubContent className="ml-2 p-2">
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("dark")}>
             <Moon />
             Dark
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("light")}>
             <Sun />
             Light
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("system")}>
             <Monitor />
             System
           </DropdownMenuItem>
