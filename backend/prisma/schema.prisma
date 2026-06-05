@@ -59,14 +59,15 @@ model Users {
 }
 
 model UserProfile {
-  id         String   @id @default(cuid())
-  occupation String?
-  gender     Gender?
-  bio        String?  @db.Text
-  web        String?
-  location   String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String   @id @default(cuid())
+  occupation  String?
+  gender      Gender?
+  bio         String?  @db.Text
+  web         String?
+  location    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  wallpaperBg String?
 
   userId String @unique
   user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -7,6 +7,14 @@ export default async function updateProfile(
   data: TUserProfileSchema,
 ) {
   try {
+    await prisma.users.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        name: data.name,
+      },
+    });
     return await prisma.userProfile.upsert({
       where: {
         userId,

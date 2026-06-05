@@ -14,6 +14,7 @@ export default async function fetchProfile(
         id: true,
         username: true,
         name: true,
+        image: true,
         userProfile: {
           select: {
             bio: true,

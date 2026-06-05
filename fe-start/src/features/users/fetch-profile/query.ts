@@ -12,4 +12,5 @@ export const userProfileQueryOptions = (username: string) =>
       }
     },
     staleTime: 5 * 60 * 1000,
+    enabled: !!username,
   });

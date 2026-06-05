@@ -1,92 +1,44 @@
+import EditProfileForm from "#/features/users/edit-profile/edit-profile-form";
+import { Dialog } from "@/components/ui/dialog";
 import { DropdownMenuItem } from "../ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "../ui/textarea";
+import type { TFetchProfile } from "#/features/users/fetch-profile/api";
+import { useState } from "react";
 
-export default function EditProfile() {
+type Props = {
+  profile: TFetchProfile;
+};
+
+export default function EditProfile({ profile }: Props) {
+  const [open, setOpen] = useState(false);
   return (
-    <DialogEditProfile>
-      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+    <DialogEditProfile profile={profile} open={open} onOpenChange={setOpen}>
+      <DropdownMenuItem onSelect={(e) => {
+        e.preventDefault();
+        setOpen(true);
+      }}>
         Edit Profile
       </DropdownMenuItem>
     </DialogEditProfile>
   );
 }
 
-function DialogEditProfile({ children }: { children: React.ReactNode }) {
+function DialogEditProfile({
+  children,
+  profile,
+  open,
+  onOpenChange,
+}: {
+  children: React.ReactNode;
+  profile: TFetchProfile;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   return (
-    <Dialog>
-      <form>
-        <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className="sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
-            </DialogDescription>
-          </DialogHeader>
-          <FieldGroup>
-            <Field>
-              <Label htmlFor="name-1">Name</Label>
-              <Input
-                id="name-1"
-                name="name"
-                placeholder="Name"
-                defaultValue="Pedro Duarte"
-              />
-            </Field>
-            <Field data-disabled>
-              <FieldLabel htmlFor="input-demo-disabled">Username</FieldLabel>
-              <Input
-                id="input-demo-disabled"
-                defaultValue={"@john_doe"}
-                disabled
-              />
-              <FieldDescription>You cannot change username</FieldDescription>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="location">Location</FieldLabel>
-              <Input id="location" placeholder="Location" />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="bio">Bio</FieldLabel>
-              <Textarea id="bio" placeholder="Bio" />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="occupation">Occupation</FieldLabel>
-              <Input id="occupation" placeholder="Software Engineer" />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="website">Website</FieldLabel>
-              <Input id="website" placeholder="https://example.com" />
-            </Field>
-          </FieldGroup>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button type="submit">Save changes</Button>
-          </DialogFooter>
-        </DialogContent>
-      </form>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <EditProfileForm profile={profile} onSuccess={() => onOpenChange(false)}>
+        {children}
+      </EditProfileForm>
     </Dialog>
   );
 }
+

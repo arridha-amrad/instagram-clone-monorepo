@@ -26,6 +26,7 @@ export type TFetchProfile = {
     location: string | null;
   } | null;
   username: string;
+  image: string | null;
   name: string;
   followers: {
     followerId: string;

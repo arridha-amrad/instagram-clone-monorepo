@@ -5,7 +5,6 @@ import {
   MapPin,
   SettingsIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarGroup, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -24,59 +23,25 @@ import { formatJoinedDate } from "#/lib/utils";
 import { UserProfileFollowButton } from "#/features/users/follow-user/follow-user-button";
 import { useQuery } from "@tanstack/react-query";
 import { authQueryOptions } from "#/features/auth/query";
+import { useParams } from "@tanstack/react-router";
+import { userProfileQueryOptions } from "#/features/users/fetch-profile/query";
+import Avatar from "../avatar";
 
-const username = "arridha08";
-
-type Props = {
-  profile: TFetchProfile;
-};
-
-export default function ProfileInfo({ profile }: Props) {
+export default function ProfileInfo() {
+  const { username } = useParams({ from: "/u/$username" });
+  const { data: profile } = useQuery(userProfileQueryOptions(username));
   const { data: authUser } = useQuery(authQueryOptions());
   return (
     <div className="w-full py-4">
       <div className="flex h-full w-full flex-col">
-        <div className="h-30 w-full">
-          <img
-            className="h-full w-full object-cover object-bottom"
-            src="https://images.unsplash.com/photo-1769540209843-c1e6a462b9d3?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="background wallpaper"
-          />
-        </div>
+        <BackgroundWallpaper backgroundImage="" />
 
         <div className="relative flex h-14 w-full bg-background">
           <div className="absolute bottom-4 left-4">
-            <Avatar className="size-32 ring-2 ring-background ring-offset-2 ring-offset-background">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            <Avatar src={profile?.image ?? undefined} className="size-32" />
           </div>
           <div className="flex w-full items-center justify-end gap-x-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <SettingsIcon />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent side="left">
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel>Settings</DropdownMenuLabel>
-                  <EditProfile />
-                  <DropdownMenuItem>Edit Password</DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <LogoutDialog>
-                    <DropdownMenuItem
-                      onSelect={(e) => e.preventDefault()}
-                      variant="destructive"
-                    >
-                      Logout
-                    </DropdownMenuItem>
-                  </LogoutDialog>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {profile && <ProfileSettingsMenu profile={profile} />}
             <Button variant={"outline"}>Message</Button>
             <UserProfileFollowButton
               targetId={profile?.id ?? ""}
@@ -102,14 +67,14 @@ export default function ProfileInfo({ profile }: Props) {
           {profile?.userProfile?.location && (
             <div className="flex items-center gap-x-1 text-sm text-muted-foreground">
               <MapPin className="size-4" />
-              <h3>Pekanbaru, Riau</h3>
+              <h3>{profile.userProfile.location}</h3>
             </div>
           )}
           {/* OCCUPATION */}
           {profile?.userProfile?.occupation && (
             <div className="flex items-center gap-x-1 text-sm text-muted-foreground">
               <BriefcaseBusiness className="size-4" />
-              <h3>Software Engineer</h3>
+              <h3>{profile.userProfile.occupation}</h3>
             </div>
           )}
           <div className="flex items-center gap-x-1 text-sm text-muted-foreground">
@@ -151,3 +116,52 @@ export default function ProfileInfo({ profile }: Props) {
     </div>
   );
 }
+
+const BackgroundWallpaper = ({
+  backgroundImage,
+}: {
+  backgroundImage?: string;
+}) => {
+  const defaultBgImg =
+    "https://images.unsplash.com/photo-1769540209843-c1e6a462b9d3?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
+  return (
+    <div className="h-30 w-full">
+      <img
+        className="h-full w-full object-cover object-bottom"
+        src={defaultBgImg}
+        alt="background wallpaper"
+      />
+    </div>
+  );
+};
+
+const ProfileSettingsMenu = ({ profile }: { profile: TFetchProfile }) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon">
+          <SettingsIcon />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent side="left">
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>Settings</DropdownMenuLabel>
+          {profile && <EditProfile profile={profile} />}
+          <DropdownMenuItem>Edit Password</DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <LogoutDialog>
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              variant="destructive"
+            >
+              Logout
+            </DropdownMenuItem>
+          </LogoutDialog>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};

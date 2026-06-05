@@ -28,9 +28,7 @@ export const Route = createFileRoute("/u/$username")({
     return { profileData };
   },
   component: RouteComponent,
-  notFoundComponent() {
-    return <div>User not found</div>;
-  },
+  notFoundComponent: () => <div>User not found</div>,
 });
 
 function RouteComponent() {
