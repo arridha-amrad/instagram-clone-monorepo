@@ -47,18 +47,40 @@ model Users {
   searchedByOthers SearchHistory[]  @relation("TargetSearches")
   // Relasi ke tabel Follow
   // Orang-orang yang memfollow user ini (Followers)
-  followers Follow[] @relation("UserFollowers")
-  
+  followers        Follow[]         @relation("UserFollowers")
+
   // Orang-orang yang difollow oleh user ini (Following)
-  following Follow[] @relation("UserFollowing")
+  following   Follow[]     @relation("UserFollowing")
+  userProfile UserProfile?
 
   @@unique([email])
   @@unique([username])
   @@map("users")
 }
 
+model UserProfile {
+  id         String   @id @default(cuid())
+  occupation String?
+  gender     Gender?
+  bio        String?  @db.Text
+  web        String?
+  location   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  userId String @unique
+  user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Definisikan Enum untuk Gender agar datanya bersih dan tervalidasi di level DB
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
 model Follow {
-  followerId String
+  followerId  String
   followingId String
   createdAt   DateTime @default(now())
 
