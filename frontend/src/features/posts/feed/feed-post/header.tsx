@@ -1,6 +1,7 @@
 import { useMemo, type ReactNode } from "react";
 import AvatarHeader from "./header-avatar";
 import type { TFeedPost } from "../api";
+import { Link } from "@tanstack/react-router";
 
 type Props = {
   feedPost: TFeedPost;
@@ -33,18 +34,26 @@ export default function FeedPostHeader({ feedPost, children }: Props) {
         <AvatarHeader images={allAvatars} />
         <div className="flex flex-col gap-1">
           <div>
-            <span className="cursor-pointer text-sm font-semibold hover:underline">
+            <Link
+              to="/u/$username"
+              params={{ username: authorUsername }}
+              className="cursor-pointer text-sm text-red-500 font-semibold hover:underline"
+            >
               {authorUsername}
-            </span>
+            </Link>
             {collaboratorUsernames.length > 0 && <span> and </span>}
             {collaboratorUsernames.length > 1 ? (
               <span className="cursor-pointer text-sm font-semibold">
                 {collaboratorUsernames.length} others
               </span>
             ) : (
-              <span className="cursor-pointer text-sm font-semibold">
+              <Link
+                to="/u/$username"
+                params={{ username: collaboratorUsernames[0] }}
+                className="cursor-pointer text-sm font-semibold"
+              >
                 {collaboratorUsernames[0]}
-              </span>
+              </Link>
             )}
           </div>
           <span className="text-xs leading-none text-muted-foreground">

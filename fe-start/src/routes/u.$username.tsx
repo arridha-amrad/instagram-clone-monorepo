@@ -2,20 +2,30 @@ import { Sidebar } from "#/components/sidebar";
 import ProfileEmptyPosts from "#/components/user-profile/profile-empty-posts";
 import ProfileInfo from "#/components/user-profile/profile-info";
 import { ProfileTabs } from "#/components/user-profile/profile-tabs";
-import { authClient } from "#/lib/auth-client";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { getSession } from "#/features/auth/api";
+import { userProfileQueryOptions } from "#/features/users/fetch-profile/query";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/u/$username")({
   head: () => ({
     meta: [{ title: "Instagram Clone - Home" }],
   }),
   beforeLoad: async ({ context: { queryClient } }) => {
-    const session = await authClient.getSession();
-    if (!session.data) {
+    const session = await getSession();
+    if (!session) {
       throw redirect({ to: "/auth/login" });
     }
     queryClient.setQueryData(["auth"], session);
-    return { session: session.data };
+    return { session: session };
+  },
+  loader: async ({ context: { queryClient }, params: { username } }) => {
+    const profileData = await queryClient.ensureQueryData(
+      userProfileQueryOptions(username),
+    );
+    if (!profileData) {
+      throw notFound();
+    }
+    return { profileData };
   },
   component: RouteComponent,
   notFoundComponent() {
@@ -25,11 +35,13 @@ export const Route = createFileRoute("/u/$username")({
 
 function RouteComponent() {
   const { session } = Route.useRouteContext();
+  const { profileData } = Route.useLoaderData();
+
   return (
     <div className="mx-auto flex min-h-svh w-full max-w-300 gap-x-4">
       {session && <Sidebar />}
       <div className="flex-1 space-y-4 px-4">
-        <ProfileInfo />
+        <ProfileInfo profile={profileData} />
         <ProfileTabs />
         <div className="flex-1">
           <ProfileEmptyPosts title="Share Photos" />

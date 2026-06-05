@@ -22,8 +22,6 @@ import { CreatePostDialog } from "#/features/posts/create/components/create-post
 export const SidebarContent = () => {
   const { data } = useQuery(authQueryOptions());
 
-  console.log(data);
-
   return (
     <div className="flex flex-1 flex-col gap-y-4">
       <SidebarLink

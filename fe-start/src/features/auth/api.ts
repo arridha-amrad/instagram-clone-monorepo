@@ -1,6 +1,7 @@
 import { privateAxios } from "#/lib/axios";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
+import { cache } from "react";
 
 export const getCurrSession = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -15,6 +16,8 @@ export const getCurrSession = createServerFn({ method: "GET" }).handler(
     return data as TSession;
   },
 );
+
+export const getSession = cache(getCurrSession);
 
 export type TSession = {
   user: User;

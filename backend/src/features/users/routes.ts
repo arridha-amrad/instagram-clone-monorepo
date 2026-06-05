@@ -6,9 +6,28 @@ import { requireAuth } from "#/middlewares/requireAuth.js";
 
 const usersRoutes = new Hono<Env>();
 
-usersRoutes.post("/follow", withPrisma, requireAuth, usersControllers.follow)
+usersRoutes.get(
+  "/profile/:username",
+  withPrisma,
+  requireAuth,
+  usersControllers.fetchProfile,
+);
 
-usersRoutes.get("/suggested-users", withPrisma, requireAuth, usersControllers.fetchSuggestedUsers)
+usersRoutes.post(
+  "/profile",
+  withPrisma,
+  requireAuth,
+  usersControllers.updateProfile,
+);
+
+usersRoutes.post("/follow", withPrisma, requireAuth, usersControllers.follow);
+
+usersRoutes.get(
+  "/suggested-users",
+  withPrisma,
+  requireAuth,
+  usersControllers.fetchSuggestedUsers,
+);
 
 usersRoutes.get("/search", withPrisma, usersControllers.searchUser);
 

@@ -1,6 +1,6 @@
 import { VolumeProvider } from "#/components/contexts/volume-context";
 import { Sidebar } from "#/components/sidebar";
-import { getCurrSession } from "#/features/auth/api";
+import { getSession } from "#/features/auth/api";
 import FeedPosts from "#/features/posts/feed/feed-posts";
 import { feedPostsQueryOptions } from "#/features/posts/feed/query";
 import SuggestedUsers from "#/features/users/suggested-users/list";
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
     meta: [{ title: "Instagram Clone - Home" }],
   }),
   beforeLoad: async ({ context: { queryClient } }) => {
-    const sess = await getCurrSession();
+    const sess = await getSession();
     if (!sess) {
       throw redirect({ to: "/auth/login" });
     }
@@ -33,6 +33,7 @@ export const Route = createFileRoute("/")({
     };
   },
   component: Home,
+  notFoundComponent: () => <p>not found</p>,
 });
 
 function Home() {

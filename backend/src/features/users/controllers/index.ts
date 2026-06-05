@@ -11,8 +11,25 @@ import {
 } from "./search-user/delete-search-histories.js";
 import fetchSuggestedUsers from "./fetch-suggested-users.js";
 import follow from "./follow.js";
+import updateProfile from "./update-profile.js";
+import { TUserProfileSchema } from "../zod-schema.js";
+import fetchProfile from "./fetch-profile.js";
 
 export const usersControllers = {
+  fetchProfile: async (c: Context<Env>) => {
+    try {
+      const username = c.req.param("username");
+      const prisma = c.get("prisma");
+      const user = c.get("user");
+      if (!user || !username) {
+        throw new MyApiError("missing parameter", 400);
+      }
+      const result = await fetchProfile(prisma, username, user?.id);
+      return c.json({ success: true, data: result }, 200);
+    } catch (err) {
+      return errorHandler(err, c);
+    }
+  },
   searchUser: async (c: Context<Env>) => {
     try {
       const query = c.req.query("q");
@@ -24,6 +41,20 @@ export const usersControllers = {
       return c.json({ success: true, data: users }, 200);
     } catch (error) {
       return errorHandler(error, c);
+    }
+  },
+  updateProfile: async (c: Context<Env>) => {
+    try {
+      const data = (await c.req.json()) as TUserProfileSchema;
+      const prisma = c.get("prisma");
+      const user = c.get("user");
+      if (!user) {
+        throw new MyApiError("unauthorized", 401);
+      }
+      const result = await updateProfile(prisma, user.id, data);
+      return c.json({ success: true, data: result });
+    } catch (err) {
+      return errorHandler(err, c);
     }
   },
   addToSearchHistory: async (c: Context<Env>) => {
@@ -91,7 +122,7 @@ export const usersControllers = {
       const prisma = c.get("prisma");
       const user = c.get("user");
       const { targetId } = (await c.req.json()) as { targetId: string };
-      console.log({targetId});
+      console.log({ targetId });
       if (!targetId || !prisma || !user)
         throw new MyApiError("missing params", 400);
       const result = await follow(prisma, user.id, targetId);

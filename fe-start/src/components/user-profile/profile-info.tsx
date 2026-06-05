@@ -18,10 +18,21 @@ import {
 } from "../ui/dropdown-menu";
 import EditProfile from "./edit-profile";
 import { LogoutDialog } from "../dialogs/logout-dialog";
+import type { TFetchProfile } from "#/features/users/fetch-profile/api";
+import MutualFollowers from "./mutual-followers";
+import { formatJoinedDate } from "#/lib/utils";
+import { UserProfileFollowButton } from "#/features/users/follow-user/follow-user-button";
+import { useQuery } from "@tanstack/react-query";
+import { authQueryOptions } from "#/features/auth/query";
 
 const username = "arridha08";
 
-export default function ProfileInfo() {
+type Props = {
+  profile: TFetchProfile;
+};
+
+export default function ProfileInfo({ profile }: Props) {
+  const { data: authUser } = useQuery(authQueryOptions());
   return (
     <div className="w-full py-4">
       <div className="flex h-full w-full flex-col">
@@ -41,9 +52,6 @@ export default function ProfileInfo() {
             </Avatar>
           </div>
           <div className="flex w-full items-center justify-end gap-x-2">
-            {/* <Button variant="outline" size="icon">
-              <SettingsIcon />
-            </Button> */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
@@ -70,81 +78,75 @@ export default function ProfileInfo() {
               </DropdownMenuContent>
             </DropdownMenu>
             <Button variant={"outline"}>Message</Button>
-            <Button variant={"default"}>Follow</Button>
+            <UserProfileFollowButton
+              targetId={profile?.id ?? ""}
+              isFollow={profile?.followers.some(
+                ({ followerId }) => followerId === authUser?.user.id,
+              )}
+            />
           </div>
         </div>
 
         <div className="">
           <div>
-            <h1 className="text-xl font-extrabold">Arridha Amrad</h1>
-            <h2 className="text-muted-foreground">@{username}</h2>
+            <h1 className="text-xl font-extrabold">{profile?.name}</h1>
+            <h2 className="text-muted-foreground">@{profile?.username}</h2>
           </div>
           <p className="py-2 text-sm leading-relaxed font-light">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Omnis
-            expedita reiciendis aliquam impedit culpa fugit error libero aperiam
-            dolorem deserunt?
+            {profile?.userProfile?.bio}
           </p>
         </div>
 
         <div className="mb-2 flex flex-wrap gap-x-4">
-          <div className="flex items-center gap-x-1 text-sm text-muted-foreground">
-            <MapPin className="size-4" />
-            <h3>Pekanbaru, Riau</h3>
-          </div>
-          <div className="flex items-center gap-x-1 text-sm text-muted-foreground">
-            <BriefcaseBusiness className="size-4" />
-            <h3>Software Engineer</h3>
-          </div>
+          {/* LOCATION */}
+          {profile?.userProfile?.location && (
+            <div className="flex items-center gap-x-1 text-sm text-muted-foreground">
+              <MapPin className="size-4" />
+              <h3>Pekanbaru, Riau</h3>
+            </div>
+          )}
+          {/* OCCUPATION */}
+          {profile?.userProfile?.occupation && (
+            <div className="flex items-center gap-x-1 text-sm text-muted-foreground">
+              <BriefcaseBusiness className="size-4" />
+              <h3>Software Engineer</h3>
+            </div>
+          )}
           <div className="flex items-center gap-x-1 text-sm text-muted-foreground">
             <Calendar className="size-4" />
-            <h3>Joined November 2025</h3>
+            <h3>{formatJoinedDate(new Date(profile?.createdAt ?? ""))}</h3>
           </div>
-          <div className="flex items-center gap-x-1 text-sm text-sky-500">
-            <Link className="size-4" />
-            <a>arridhaamrad.com</a>
-          </div>
+
+          {/* WEB */}
+          {profile?.userProfile?.web && (
+            <div className="flex items-center gap-x-1 text-sm text-sky-500">
+              <Link className="size-4" />
+              <a>{profile.userProfile.web}</a>
+            </div>
+          )}
         </div>
 
         <div className="mb-2 flex gap-x-4 text-sm">
+          {/* TOTAL POST */}
           <div className="space-x-1">
-            <span className="font-semibold">1.2k</span>
+            <span className="font-semibold">
+              {profile?._count.concretePosts}
+            </span>
             <span className="font-light text-muted-foreground">posts</span>
           </div>
+          {/* TOTAL FOLLOWERS */}
           <div className="space-x-1">
-            <span className="font-semibold">379</span>
+            <span className="font-semibold">{profile?._count.followers}</span>
             <span className="font-light text-muted-foreground">followers</span>
           </div>
+          {/* TOTAL FOLLOWINGS */}
           <div className="space-x-1">
-            <span className="font-semibold">54</span>
+            <span className="font-semibold">{profile?._count.following}</span>
             <span className="font-light text-muted-foreground">followings</span>
           </div>
         </div>
 
-        <div className="flex gap-x-2">
-          <AvatarGroup className="grayscale">
-            <Avatar size="sm">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <Avatar size="sm">
-              <AvatarImage
-                src="https://github.com/maxleiter.png"
-                alt="@maxleiter"
-              />
-              <AvatarFallback>LR</AvatarFallback>
-            </Avatar>
-            <Avatar size="sm">
-              <AvatarImage
-                src="https://github.com/evilrabbit.png"
-                alt="@evilrabbit"
-              />
-              <AvatarFallback>ER</AvatarFallback>
-            </Avatar>
-          </AvatarGroup>
-          <span className="text-sm text-muted-foreground">
-            Followed by Shadcn, Max Leiter, Evil Rabbit
-          </span>
-        </div>
+        <MutualFollowers />
       </div>
     </div>
   );

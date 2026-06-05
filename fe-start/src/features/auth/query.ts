@@ -1,10 +1,10 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getCurrSession, type TSession } from "./api";
+import { getSession, type TSession } from "./api";
 
 export const authQueryOptions = () =>
   queryOptions({
     queryKey: ["auth"],
-    queryFn: getCurrSession,
+    queryFn: getSession,
     select(data: any) {
       if (data.data) {
         return data.data as TSession;
