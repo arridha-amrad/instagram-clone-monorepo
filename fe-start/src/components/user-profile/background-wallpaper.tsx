@@ -3,6 +3,9 @@ import { useMeasure } from "@uidotdev/usehooks";
 import { useRef, useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import DeleteWallpaperButton from "#/features/users/delete-wallpaper/delete-wallpaper-button";
+import { useQuery } from "@tanstack/react-query";
+import { authQueryOptions } from "#/features/auth/query";
+import { useParams } from "@tanstack/react-router";
 
 const defaultBgImg = "https://wallpapercave.com/wp/wp3280027.jpg";
 
@@ -12,17 +15,17 @@ const BackgroundWallpaper = ({
   backgroundImage?: string;
 }) => {
   const [wallpaperContainerRef, { width, height }] = useMeasure();
-  const [currentBackgroud, setCurrentBackgroud] = useState(
+  const [currentBackground, setCurrentBackground] = useState(
     backgroundImage ?? defaultBgImg,
   );
 
   const inputFileRef = useRef<HTMLInputElement>(null);
+  const { username } = useParams({ from: "/u/$username" });
 
-  // ✅ Sinkronisasi State Lokal dengan Perubahan Props/Cache
+  const { data: auth } = useQuery(authQueryOptions());
+
   useEffect(() => {
-    // Jika props backgroundImage berubah (termasuk jadi null/undefined setelah didelete)
-    // Kembalikan state lokal ke nilai props baru tersebut, atau fallback ke defaultBgImg
-    setCurrentBackgroud(backgroundImage ?? defaultBgImg);
+    setCurrentBackground(backgroundImage ?? defaultBgImg);
   }, [backgroundImage]);
 
   return (
@@ -31,26 +34,26 @@ const BackgroundWallpaper = ({
         inputFileRef={inputFileRef}
         wallpaperContainerWidth={width ?? 0}
         wallpaperContainerHeight={height ?? 0}
-        setCurrentBackgroud={setCurrentBackgroud}
+        setCurrentBackground={setCurrentBackground}
       >
         <>
           <img
             className="h-full w-full object-cover object-center"
-            src={currentBackgroud}
+            src={currentBackground}
             alt="background wallpaper"
           />
-          <div className="absolute transition-opacity duration-200 ease-linear inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:bg-muted/50 gap-2">
-            {/* ✅ Tampilkan tombol delete hanya jika wallpaper bukan gambar default */}
-            {backgroundImage && <DeleteWallpaperButton />}
-
-            <Button
-              onClick={() => inputFileRef.current?.click()}
-              size={"sm"}
-              variant={"outline"}
-            >
-              Change wallpaper
-            </Button>
-          </div>
+          {auth && auth.user.username === username && (
+            <div className="absolute transition-opacity duration-200 ease-linear inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:bg-muted/50 gap-2">
+              {backgroundImage && <DeleteWallpaperButton />}
+              <Button
+                onClick={() => inputFileRef.current?.click()}
+                size={"sm"}
+                variant={"outline"}
+              >
+                Change wallpaper
+              </Button>
+            </div>
+          )}
         </>
       </UpdatableWallpaper>
     </div>

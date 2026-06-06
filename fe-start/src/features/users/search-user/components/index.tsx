@@ -4,7 +4,11 @@ import SearchHistory from "./search-history";
 import SearchResult from "./search-result";
 import type { TSearchUser } from "../api";
 
-export default function SearchUser() {
+type Props = {
+  setOpen: (v: boolean) => void;
+};
+
+export default function SearchUser({ setOpen }: Props) {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [searchResult, setSearchResult] = useState<TSearchUser[]>([]);
   return (
@@ -16,7 +20,7 @@ export default function SearchUser() {
       {isSearchActive ? (
         <SearchResult users={searchResult} />
       ) : (
-        <SearchHistory />
+        <SearchHistory setOpen={setOpen} />
       )}
     </>
   );

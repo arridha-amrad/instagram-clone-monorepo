@@ -1,54 +1,48 @@
 import { Button } from "#/components/ui/button";
-import { useUpdateBgWallpaperMutation } from "#/features/users/update-wallpaper/mutation";
 import { getCroppedImg } from "#/lib/utils";
-import { Check, Loader2, X } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import { Check, X } from "lucide-react";
+import { useMemo, useState } from "react";
 import Cropper, { type Area } from "react-easy-crop";
+import { useUpdateAvatarMutation } from "./mutation";
 import toast from "react-hot-toast";
 
-const UpdatableWallpaper = ({
-  children,
-  inputFileRef,
-  wallpaperContainerHeight,
-  wallpaperContainerWidth,
-  setCurrentBackground,
-}: {
+type Props = {
   children: React.ReactNode;
-  inputFileRef: React.RefObject<HTMLInputElement | null>;
-  wallpaperContainerWidth: number;
-  wallpaperContainerHeight: number;
-  setCurrentBackground: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+  inputFileRef: React.RefObject<HTMLInputElement | null> | null;
+  avatarContainerWidth: number;
+  avatarContainerHeight: number;
+  setCurrentAvatar: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export default function UpdatableAvatar({
+  inputFileRef,
+  children,
+  avatarContainerWidth,
+  avatarContainerHeight,
+  setCurrentAvatar,
+}: Props) {
   const [pickedImageFile, setPickedImageFile] = useState<File | null>(null);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-
-  const { mutateAsync, isPending } = useUpdateBgWallpaperMutation();
-
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>,
-  ) => {
-    const files = e.target.files;
-    if (!files) return;
-    setPickedImageFile(files[0]);
-  };
-
-  const onCropComplete = (_: Area, croppedAreaPixels: Area) => {
-    setCroppedAreaPixels(croppedAreaPixels);
-  };
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
   const pickedImageUrl = useMemo(() => {
     if (!pickedImageFile) return null;
     return URL.createObjectURL(pickedImageFile);
   }, [pickedImageFile]);
 
-  const handleCancel = () => {
-    setPickedImageFile(null);
-    setCrop({ x: 0, y: 0 });
-    setZoom(1);
-    if (inputFileRef.current) inputFileRef.current.value = ""; // Reset input file html
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      setPickedImageFile(files[0]);
+    }
   };
+
+  const onCropComplete = (_: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  const { mutateAsync, isPending } = useUpdateAvatarMutation();
 
   const handleSaveCrop = async () => {
     if (!pickedImageUrl || !croppedAreaPixels) return;
@@ -57,15 +51,23 @@ const UpdatableWallpaper = ({
         pickedImageUrl,
         croppedAreaPixels,
       );
-      setCurrentBackground(URL.createObjectURL(croppedFile));
+      setCurrentAvatar(URL.createObjectURL(croppedFile));
       const formData = new FormData();
       formData.append("file", croppedFile);
       await mutateAsync(formData);
-      toast.success("wallpaper updated");
+      toast.success("Avatar updated successfully");
       handleCancel();
     } catch (error) {
+      toast.error("Failed to update avatar");
       console.error("Gagal memotong gambar:", error);
     }
+  };
+
+  const handleCancel = () => {
+    setPickedImageFile(null);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    if (inputFileRef?.current) inputFileRef.current.value = ""; // Reset input file html
   };
 
   return (
@@ -80,17 +82,17 @@ const UpdatableWallpaper = ({
                 image={pickedImageUrl}
                 crop={crop}
                 zoom={zoom}
+                aspect={1}
+                cropShape="round"
                 showGrid={false}
                 onCropChange={setCrop}
                 onCropComplete={onCropComplete}
                 onZoomChange={setZoom}
                 minZoom={1}
-                cropShape="rect"
-                objectFit="cover"
-                maxZoom={5}
+                maxZoom={3}
                 cropSize={{
-                  height: wallpaperContainerHeight,
-                  width: wallpaperContainerWidth,
+                  width: avatarContainerWidth,
+                  height: avatarContainerHeight,
                 }}
                 classes={{
                   containerClassName: "w-full h-full",
@@ -100,40 +102,41 @@ const UpdatableWallpaper = ({
               />
             </div>
           </div>
-          <div className="absolute bottom-2 right-2">
-            <div className="flex items-center w-full h-full justify-center gap-x-2 bg-muted/70 p-1 rounded-full">
+          <div className="absolute -bottom-5 inset-x-0 z-30 pointer-events-auto">
+            <div className="flex relative z-999 justify-center gap-x-3 px-1">
               <Button
                 onClick={handleCancel}
                 size="icon-xs"
-                variant={"secondary"}
                 type="button"
+                variant={"secondary"}
                 disabled={isPending}
                 title="cancel"
               >
-                <X />
+                <X className="size-4" />
               </Button>
 
               <Button
                 onClick={handleSaveCrop}
+                variant="default"
                 size="icon-xs"
                 type="button"
                 disabled={isPending}
                 title="save"
               >
-                {isPending ? <Loader2 className="animate-spin" /> : <Check />}
+                <Check className="size-4" />
               </Button>
             </div>
           </div>
         </>
       )}
+
       <input
         type="file"
+        accept="image/*"
         hidden
         ref={inputFileRef}
         onChange={handleFileChange}
       />
     </>
   );
-};
-
-export default UpdatableWallpaper;
+}

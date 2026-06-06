@@ -1,3 +1,4 @@
+import { env } from "#/config/env.js";
 import { PrismaClient } from "#/generated/prisma/client.js";
 import { removeFile, uploadToCloudinary } from "#/lib/cloudinaryFn.js";
 
@@ -43,7 +44,7 @@ export async function updateBackgroundWallpaper(
     }
     const { secure_url } = await uploadToCloudinary(
       file,
-      "instagram-monorepo-hono/bgWallpaper",
+      `${env.CLOUDINARY_FOLDER}/bgWallpaper`,
     );
     return prisma.userProfile.update({
       where: {

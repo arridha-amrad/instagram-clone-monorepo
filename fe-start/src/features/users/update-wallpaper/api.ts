@@ -2,9 +2,6 @@ import { privateAxios } from "#/lib/axios";
 import type { Gender } from "../edit-profile/zod-schema";
 
 export const updateBackgroundWallpaperApi = async (formData: FormData) => {
-  const file = formData.get("file");
-  console.log({ file });
-
   const { data } = await privateAxios.put("/users/profile/wallpaper", formData);
   return data.data as TUpdateBgWallpaper;
 };

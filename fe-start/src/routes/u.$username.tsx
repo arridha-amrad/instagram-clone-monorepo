@@ -33,13 +33,12 @@ export const Route = createFileRoute("/u/$username")({
 
 function RouteComponent() {
   const { session } = Route.useRouteContext();
-  const { profileData } = Route.useLoaderData();
 
   return (
     <div className="mx-auto flex min-h-svh w-full max-w-300 gap-x-4">
       {session && <Sidebar />}
       <div className="flex-1 space-y-4 px-4">
-        <ProfileInfo profile={profileData} />
+        <ProfileInfo />
         <ProfileTabs />
         <div className="flex-1">
           <ProfileEmptyPosts title="Share Photos" />

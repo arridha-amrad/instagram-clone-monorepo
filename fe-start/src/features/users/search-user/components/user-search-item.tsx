@@ -1,31 +1,31 @@
 import Avatar from "#/components/avatar";
-import { Button } from "#/components/ui/button";
 import {
   Item,
-  ItemActions,
   ItemContent,
   ItemDescription,
   ItemMedia,
   ItemTitle,
 } from "#/components/ui/item";
+import { authQueryOptions } from "#/features/auth/query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import type { TSearchUser } from "../api";
 import { useAddToSearchHistoryMutation } from "../mutation";
-import { useQuery } from "@tanstack/react-query";
-import { authQueryOptions } from "#/features/auth/query";
 
 type Props = {
   user: TSearchUser;
+  setOpen: (open: boolean) => void;
 };
 
-export default function UserSearchItem({ user }: Props) {
+export default function UserSearchItem({ user, setOpen }: Props) {
   const { mutate } = useAddToSearchHistoryMutation();
   const { data } = useQuery(authQueryOptions());
 
-  const handleLinkClick = () => {
-    if (!data?.data) return;
-    if (user.id === data.data.user.id) return;
+  const handleLinkClick = async () => {
+    if (!data) return;
+    if (user.id === data.user.id) return;
     mutate(user.id);
+    setOpen(false);
   };
 
   return (

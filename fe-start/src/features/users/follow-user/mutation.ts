@@ -3,7 +3,7 @@ import { followUserApi } from "./api";
 import type { TSuggestedUsers } from "../suggested-users/api";
 import toast from "react-hot-toast";
 
-export const useFolloUserMutation = () => {
+export const useFollowUserMutation = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (targetId: string) => {
@@ -39,6 +39,9 @@ export const useFolloUserMutation = () => {
         qc.setQueryData(["suggested-users"], context.oldSuggUsers);
       }
       toast.error(err.message);
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };

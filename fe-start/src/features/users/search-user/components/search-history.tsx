@@ -10,7 +10,11 @@ import { useDeleteAllFromSearchHistoriesMutation } from "../mutation";
 import { useFetchHistoriesQuery } from "../query";
 import UserSearchItem from "./user-search-item";
 
-export default function SearchHistory() {
+type Props = {
+  setOpen: (open: boolean) => void;
+};
+
+export default function SearchHistory({ setOpen }: Props) {
   const { mutate } = useDeleteAllFromSearchHistoriesMutation();
   const { data } = useFetchHistoriesQuery();
   return (
@@ -29,9 +33,9 @@ export default function SearchHistory() {
       {!data || data.length === 0 ? (
         <EmptyMuted />
       ) : (
-        <div className="flex flex-col gap-y-2 h-[250px] overflow-y-scroll">
+        <div className="flex flex-col gap-y-2 h-[250px] overflow-y-auto custom-scrollbar">
           {data?.map((user) => (
-            <UserSearchItem key={user.id} user={user} />
+            <UserSearchItem key={user.id} user={user} setOpen={setOpen} />
           ))}
         </div>
       )}
@@ -41,7 +45,7 @@ export default function SearchHistory() {
 
 function EmptyMuted() {
   return (
-    <Empty className="h-full bg-muted/30 h-[250px]">
+    <Empty className="bg-muted/30 h-[250px]">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <UserRoundSearch />

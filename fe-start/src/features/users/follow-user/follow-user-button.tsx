@@ -1,6 +1,6 @@
 import { Button } from "#/components/ui/button";
 import { useState } from "react";
-import { useFolloUserMutation } from "./mutation";
+import { useFollowUserMutation } from "./mutation";
 
 type Props = {
   targetId: string;
@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const SuggestedUserFollowButton = ({ targetId, isFollow }: Props) => {
-  const { mutate } = useFolloUserMutation();
+  const { mutate } = useFollowUserMutation();
   return (
     <Button
       onClick={() => mutate(targetId)}
@@ -22,7 +22,7 @@ export const SuggestedUserFollowButton = ({ targetId, isFollow }: Props) => {
 };
 
 export const UserProfileFollowButton = ({ targetId, isFollow }: Props) => {
-  const { mutate } = useFolloUserMutation();
+  const { mutate } = useFollowUserMutation();
 
   const [isF, setIsF] = useState(isFollow);
 
@@ -32,7 +32,7 @@ export const UserProfileFollowButton = ({ targetId, isFollow }: Props) => {
         setIsF((val) => !val);
         mutate(targetId);
       }}
-      variant={"default"}
+      variant={isF ? "secondary" : "default"}
     >
       {isF ? "Following" : "Follow"}
     </Button>

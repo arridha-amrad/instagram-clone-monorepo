@@ -1,6 +1,4 @@
-import { Link } from "@tanstack/react-router";
-import { SearchIcon, X } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import SearchUserFeature from "#/features/users/search-user/components";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,30 +10,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "../ui/input-group";
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemMedia,
-  ItemTitle,
-} from "../ui/item";
-import SearchForm from "#/features/users/search-user/components/search-form";
-import SearchUserFeature from "#/features/users/search-user/components";
+import { useState, type ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
 };
 
 export function SearchDialog({ children }: Props) {
+  const [isOpen, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         className="ring-2 ring-muted sm:max-w-sm"
@@ -45,7 +29,7 @@ export function SearchDialog({ children }: Props) {
           <DialogTitle>Search User</DialogTitle>
           <DialogDescription>Find any users here</DialogDescription>
         </DialogHeader>
-        <SearchUserFeature />
+        <SearchUserFeature setOpen={setOpen} />
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>

@@ -32,6 +32,9 @@ export default function ProfileInfo() {
   const { username } = useParams({ from: "/u/$username" });
   const { data: profile } = useQuery(userProfileQueryOptions(username));
   const { data: authUser } = useQuery(authQueryOptions());
+
+  const isAuthUser = authUser?.user.id === profile?.id;
+
   return (
     <div className="w-full py-4">
       <div className="flex h-full w-full flex-col">
@@ -43,14 +46,16 @@ export default function ProfileInfo() {
           <ProfileAvatar image={profile?.image ?? null} />
 
           <div className="flex w-full items-center justify-end gap-x-2">
-            {profile && <ProfileSettingsMenu profile={profile} />}
+            {isAuthUser && profile && <ProfileSettingsMenu profile={profile} />}
             <Button variant={"outline"}>Message</Button>
-            <UserProfileFollowButton
-              targetId={profile?.id ?? ""}
-              isFollow={profile?.followers.some(
-                ({ followerId }) => followerId === authUser?.user.id,
-              )}
-            />
+            {!isAuthUser && (
+              <UserProfileFollowButton
+                targetId={profile?.id ?? ""}
+                isFollow={profile?.followers.some(
+                  ({ followerId }) => followerId === authUser?.user.id,
+                )}
+              />
+            )}
           </div>
         </div>
 

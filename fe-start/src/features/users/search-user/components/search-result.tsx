@@ -3,9 +3,10 @@ import UserSearchItem from "./user-search-item";
 
 type Props = {
   users: TSearchUser[];
+  setOpen: (v: boolean) => void;
 };
 
-export default function SearchResult({ users }: Props) {
+export default function SearchResult({ users, setOpen }: Props) {
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between">
@@ -15,7 +16,7 @@ export default function SearchResult({ users }: Props) {
       </div>
       <div className="flex flex-col gap-y-2 h-[250px]">
         {users.map((user) => (
-          <UserSearchItem key={user.id} user={user} />
+          <UserSearchItem setOpen={setOpen} key={user.id} user={user} />
         ))}
       </div>
     </div>

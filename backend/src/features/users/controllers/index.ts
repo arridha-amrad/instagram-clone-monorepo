@@ -18,13 +18,28 @@ import {
   updateBackgroundWallpaper,
 } from "./update-bg-wallpaper.js";
 import updateProfile from "./update-profile.js";
+import updateAvatar from "./update-avatar.js";
 
 export const usersControllers = {
+  updateAvatar: async (c: Context<Env>) => {
+    try {
+      const prisma = c.get("prisma");
+      const user = c.get("user");
+      if (!user) throw new MyApiError("unauthorized", 401);
+      const form = await c.req.parseBody();
+      const file = form["file"] as File;
+      if (!file) throw new MyApiError("file is missing", 400);
+      const result = await updateAvatar(prisma, user.id, file);
+      return c.json({ success: true, data: result }, 200);
+    } catch (err) {
+      return errorHandler(err, c);
+    }
+  },
   removeCurrentBackgroundWallpaper: async (c: Context<Env>) => {
     try {
       const prisma = c.get("prisma");
       const user = c.get("user");
-      if (!user) throw new MyApiError("unathorized", 401);
+      if (!user) throw new MyApiError("unauthorized", 401);
       await removeCurrentBackgroundWallpaper(prisma, user.id);
       return c.json({ success: true, data: { message: "deleted" } });
     } catch (err) {
@@ -151,7 +166,6 @@ export const usersControllers = {
       const prisma = c.get("prisma");
       const user = c.get("user");
       const { targetId } = (await c.req.json()) as { targetId: string };
-      console.log({ targetId });
       if (!targetId || !prisma || !user)
         throw new MyApiError("missing params", 400);
       const result = await follow(prisma, user.id, targetId);
