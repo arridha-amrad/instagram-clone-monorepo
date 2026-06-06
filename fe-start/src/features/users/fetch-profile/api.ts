@@ -24,6 +24,7 @@ export type TFetchProfile = {
     bio: string | null;
     web: string | null;
     location: string | null;
+    bgWallpaper: string | null;
   } | null;
   username: string;
   image: string | null;

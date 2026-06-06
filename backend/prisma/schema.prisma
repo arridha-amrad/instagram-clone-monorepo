@@ -67,7 +67,7 @@ model UserProfile {
   location    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  wallpaperBg String?
+  bgWallpaper String?
 
   userId String @unique
   user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)

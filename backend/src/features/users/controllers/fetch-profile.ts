@@ -22,6 +22,7 @@ export default async function fetchProfile(
             location: true,
             occupation: true,
             web: true,
+            bgWallpaper: true,
           },
         },
         createdAt: true,

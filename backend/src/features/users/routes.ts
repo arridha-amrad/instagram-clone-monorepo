@@ -6,6 +6,13 @@ import { requireAuth } from "#/middlewares/requireAuth.js";
 
 const usersRoutes = new Hono<Env>();
 
+usersRoutes.put(
+  "/profile/wallpaper",
+  withPrisma,
+  requireAuth,
+  usersControllers.updateBackgroundWallpaper,
+);
+
 usersRoutes.get(
   "/profile/:username",
   withPrisma,

@@ -1,21 +1,36 @@
+import { MyApiError } from "#/errors.js";
 import { Env } from "#/types.js";
 import { Context } from "hono";
-import searchUser from "./search-user/search-user.js";
-import { MyApiError } from "#/errors.js";
 import { errorHandler } from "../../utils.js";
+import { TUserProfileSchema } from "../zod-schema.js";
+import fetchProfile from "./fetch-profile.js";
+import fetchSuggestedUsers from "./fetch-suggested-users.js";
+import follow from "./follow.js";
 import addToSearchHistory from "./search-user/add-to-search-history.js";
-import fetchSearchHistories from "./search-user/fetch-search-histories.js";
 import {
   deleteAllSearchHistories,
   deleteSearchHistory,
 } from "./search-user/delete-search-histories.js";
-import fetchSuggestedUsers from "./fetch-suggested-users.js";
-import follow from "./follow.js";
+import fetchSearchHistories from "./search-user/fetch-search-histories.js";
+import searchUser from "./search-user/search-user.js";
+import updateBackgroundWallpaper from "./update-background.js";
 import updateProfile from "./update-profile.js";
-import { TUserProfileSchema } from "../zod-schema.js";
-import fetchProfile from "./fetch-profile.js";
 
 export const usersControllers = {
+  updateBackgroundWallpaper: async (c: Context<Env>) => {
+    try {
+      const prisma = c.get("prisma");
+      const user = c.get("user");
+      const formData = await c.req.formData();
+      const file = formData.get("file") as File;
+      if (!file) throw new MyApiError("file is missing", 400);
+      if (!user) throw new MyApiError("unauthorized", 401);
+      const result = await updateBackgroundWallpaper(prisma, user.id, file);
+      return c.json({ success: true, data: result });
+    } catch (err) {
+      return errorHandler(err, c);
+    }
+  },
   fetchProfile: async (c: Context<Env>) => {
     try {
       const username = c.req.param("username");

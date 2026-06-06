@@ -1,5 +1,5 @@
 import { env } from "../config/env.js";
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 
 export const initCloudinary = () => {
   cloudinary.config({
@@ -7,6 +7,27 @@ export const initCloudinary = () => {
     api_key: env.CLOUDINARY_API_KEY,
     api_secret: env.CLOUDINARY_SECRET,
   });
+};
+
+export const uploadToCloudinary = async (file: File, folderName: string) => {
+  if (!file) throw new Error("No file provided");
+  initCloudinary();
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  const uploadResult = await new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream(
+        {
+          folder: folderName || undefined,
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        },
+      )
+      .end(buffer);
+  });
+  return uploadResult as UploadApiResponse;
 };
 
 export const createSignature = async ({ folder }: { folder?: string }) => {

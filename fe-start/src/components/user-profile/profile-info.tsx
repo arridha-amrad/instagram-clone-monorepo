@@ -1,3 +1,10 @@
+import { authQueryOptions } from "#/features/auth/query";
+import type { TFetchProfile } from "#/features/users/fetch-profile/api";
+import { userProfileQueryOptions } from "#/features/users/fetch-profile/query";
+import { UserProfileFollowButton } from "#/features/users/follow-user/follow-user-button";
+import { formatJoinedDate } from "#/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "@tanstack/react-router";
 import {
   BriefcaseBusiness,
   Calendar,
@@ -5,27 +12,21 @@ import {
   MapPin,
   SettingsIcon,
 } from "lucide-react";
+import { LogoutDialog } from "../dialogs/logout-dialog";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuLabel,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import EditProfile from "./edit-profile";
-import { LogoutDialog } from "../dialogs/logout-dialog";
-import type { TFetchProfile } from "#/features/users/fetch-profile/api";
 import MutualFollowers from "./mutual-followers";
-import { formatJoinedDate } from "#/lib/utils";
-import { UserProfileFollowButton } from "#/features/users/follow-user/follow-user-button";
-import { useQuery } from "@tanstack/react-query";
-import { authQueryOptions } from "#/features/auth/query";
-import { useParams } from "@tanstack/react-router";
-import { userProfileQueryOptions } from "#/features/users/fetch-profile/query";
-import Avatar from "../avatar";
+import ProfileAvatar from "./profile-avatar";
+import BackgroundWallpaper from "./background-wallpaper";
 
 export default function ProfileInfo() {
   const { username } = useParams({ from: "/u/$username" });
@@ -34,12 +35,11 @@ export default function ProfileInfo() {
   return (
     <div className="w-full py-4">
       <div className="flex h-full w-full flex-col">
-        <BackgroundWallpaper backgroundImage="" />
+        <BackgroundWallpaper />
 
         <div className="relative flex h-14 w-full bg-background">
-          <div className="absolute bottom-4 left-4">
-            <Avatar src={profile?.image ?? undefined} className="size-32" />
-          </div>
+          <ProfileAvatar image={profile?.image ?? null} />
+
           <div className="flex w-full items-center justify-end gap-x-2">
             {profile && <ProfileSettingsMenu profile={profile} />}
             <Button variant={"outline"}>Message</Button>
@@ -116,25 +116,6 @@ export default function ProfileInfo() {
     </div>
   );
 }
-
-const BackgroundWallpaper = ({
-  backgroundImage,
-}: {
-  backgroundImage?: string;
-}) => {
-  const defaultBgImg =
-    "https://images.unsplash.com/photo-1769540209843-c1e6a462b9d3?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-
-  return (
-    <div className="h-30 w-full">
-      <img
-        className="h-full w-full object-cover object-bottom"
-        src={defaultBgImg}
-        alt="background wallpaper"
-      />
-    </div>
-  );
-};
 
 const ProfileSettingsMenu = ({ profile }: { profile: TFetchProfile }) => {
   return (
