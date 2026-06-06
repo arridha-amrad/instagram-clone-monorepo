@@ -24,8 +24,8 @@ export const Route = createFileRoute("/")({
   },
   loader: async ({ context: { queryClient } }) => {
     const [posts, users] = await Promise.all([
-      queryClient.ensureQueryData(feedPostsQueryOptions()),
-      queryClient.ensureQueryData(suggestedUsersQueryOptions()),
+      await queryClient.ensureQueryData(feedPostsQueryOptions()),
+      await queryClient.ensureQueryData(suggestedUsersQueryOptions()),
     ]);
     return {
       posts,

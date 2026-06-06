@@ -216,4 +216,17 @@ body {
     scrollbar-width: thin;
     scrollbar-color: oklch(0.708 0 0 / 0.3) transparent;
   }
+
+  /* Mengubah warna progress bar */
+  #nprogress .bar {
+    background: var(--primary) !important; /* Contoh: Warna hijau Tailwind */
+    height: 3px !important; /* Mengatur ketebalan bar */
+  }
+
+  /* Mengubah warna efek bayangan/glow di ujung kanan bar */
+  #nprogress .peg {
+    box-shadow:
+      0 0 10px var(--primary),
+      0 0 5px var(--primary) !important;
+  }
 }

@@ -1,19 +1,20 @@
+import { TanStackDevtools } from "@tanstack/react-devtools";
 import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { TanStackDevtools } from "@tanstack/react-devtools";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
 import appCss from "../styles.css?url";
 
-import type { QueryClient } from "@tanstack/react-query";
-import { ThemeProvider } from "#/context/theme-context";
 import { TooltipProvider } from "#/components/ui/tooltip";
+import { ThemeProvider } from "#/context/theme-context";
+import type { QueryClient } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+import { TopLoader } from "#/components/toploader";
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -53,6 +54,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         <ThemeProvider>
           <TooltipProvider>
+            <TopLoader />
             {children}
             <Toaster position="bottom-center" />
           </TooltipProvider>
