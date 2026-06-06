@@ -3,6 +3,7 @@ import { Context } from "hono";
 import { Env } from "../types.js";
 
 export const errorHandler = (err: unknown, c: Context<Env>): Response => {
+  console.log(err);
   if (err instanceof MyApiError) {
     return c.json({ success: false, message: err.message }, err.statusCode);
   }

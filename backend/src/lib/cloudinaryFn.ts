@@ -50,9 +50,9 @@ export const createSignature = async ({ folder }: { folder?: string }) => {
   };
 };
 
-export const getPublicIdFromUrl = (url: string) => {
+export const getFullPathPublicIdFromUrl = (url: string) => {
   const parts = url.split("/");
-  const startIndex = parts.indexOf("instagram-monorepo-hono-api");
+  const startIndex = parts.indexOf(env.CLOUDINARY_FOLDER);
   if (startIndex === -1) return null;
   const publicIdWithExtension = parts.slice(startIndex).join("/");
   return publicIdWithExtension.replace(/\.[^/.]+$/, "");
@@ -60,7 +60,7 @@ export const getPublicIdFromUrl = (url: string) => {
 
 export const removeFile = async (url: string) => {
   initCloudinary();
-  const public_id = getPublicIdFromUrl(url);
+  const public_id = getFullPathPublicIdFromUrl(url);
   if (!public_id) return null;
   await cloudinary.uploader.destroy(public_id);
   return "deleted";

@@ -13,16 +13,30 @@ import {
 } from "./search-user/delete-search-histories.js";
 import fetchSearchHistories from "./search-user/fetch-search-histories.js";
 import searchUser from "./search-user/search-user.js";
-import updateBackgroundWallpaper from "./update-background.js";
+import {
+  removeCurrentBackgroundWallpaper,
+  updateBackgroundWallpaper,
+} from "./update-bg-wallpaper.js";
 import updateProfile from "./update-profile.js";
 
 export const usersControllers = {
+  removeCurrentBackgroundWallpaper: async (c: Context<Env>) => {
+    try {
+      const prisma = c.get("prisma");
+      const user = c.get("user");
+      if (!user) throw new MyApiError("unathorized", 401);
+      await removeCurrentBackgroundWallpaper(prisma, user.id);
+      return c.json({ success: true, data: { message: "deleted" } });
+    } catch (err) {
+      return errorHandler(err, c);
+    }
+  },
   updateBackgroundWallpaper: async (c: Context<Env>) => {
     try {
       const prisma = c.get("prisma");
       const user = c.get("user");
-      const formData = await c.req.formData();
-      const file = formData.get("file") as File;
+      const formData = await c.req.parseBody();
+      const file = formData["file"] as File;
       if (!file) throw new MyApiError("file is missing", 400);
       if (!user) throw new MyApiError("unauthorized", 401);
       const result = await updateBackgroundWallpaper(prisma, user.id, file);

@@ -35,7 +35,9 @@ export default function ProfileInfo() {
   return (
     <div className="w-full py-4">
       <div className="flex h-full w-full flex-col">
-        <BackgroundWallpaper />
+        <BackgroundWallpaper
+          backgroundImage={profile?.userProfile?.bgWallpaper ?? undefined}
+        />
 
         <div className="relative flex h-14 w-full bg-background">
           <ProfileAvatar image={profile?.image ?? null} />

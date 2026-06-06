@@ -16,6 +16,7 @@ import LocationInput from "./location-input";
 import { useCreatePostMutation } from "../../mutation";
 import { uploadToCloudinary } from "#/lib/cloudinaryFn";
 import { getCloudinaryUploadSignature } from "../../api";
+import { env } from "#/config/env";
 
 export default function FormCaption() {
   const { formRef, mediaWithTaggedUsers, aspectRatio, setStep } =
@@ -40,7 +41,9 @@ export default function FormCaption() {
       // 1. Upload media
       const promises = mediaWithTaggedUsers.map(async (m) => {
         const { apiKey, cloudName, signature, timestamp } =
-          await getCloudinaryUploadSignature("instagram-monorepo-hono/post");
+          await getCloudinaryUploadSignature(
+            `${env.VITE_CLOUDINARY_FOLDER}/post`,
+          );
 
         // 2. Upload
         const { secure_url } = await uploadToCloudinary({
@@ -49,7 +52,7 @@ export default function FormCaption() {
           timestamp,
           file: m.file,
           signature,
-          folder: "instagram-monorepo-hono/post",
+          folder: `${env.VITE_CLOUDINARY_FOLDER}/post`,
         });
         const newMedia: Omit<MediaWithTaggedUsers, "file"> = {
           src: secure_url,

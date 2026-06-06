@@ -4,7 +4,4 @@ import axios from "axios";
 export const privateAxios = axios.create({
   baseURL: `${serverHost}/api`,
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
