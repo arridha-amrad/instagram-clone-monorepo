@@ -1,17 +1,16 @@
 import { Upload } from "lucide-react";
 import { useState } from "react";
 import { FileUpload, FileUploadDropzone } from "@/components/ui/file-upload";
-import { useCreatePost } from "./create-post-context";
+import { Steps, useCreatePost } from "./create-post-context";
 import toast from "react-hot-toast";
 
 export default function PhotosVideosPicker() {
-  const { setMedia, nextStep } = useCreatePost();
+  const { setMedia, setStep } = useCreatePost();
   const [files, setFiles] = useState<Array<File>>([]);
 
   const handleFileChange = (newFiles: File[]) => {
     if (newFiles.length === 0) return;
 
-    // 1. Pisahkan file yang valid dan yang terlalu besar
     const validFiles: File[] = [];
     let hasInvalidImage = false;
 
@@ -23,17 +22,14 @@ export default function PhotosVideosPicker() {
       }
     });
 
-    // 2. Jika ada yang tidak valid, tampilkan toast (Gunakan toast id agar tidak duplikat)
     if (hasInvalidImage) {
       toast.error("Images must be less than 1MB", {
         id: "upload-size-error", // ID unik mencegah toast menumpuk jika dipanggil 2x bersamaan
       });
 
-      // Jika semua file yang dimasukkan ternyata tidak valid, stop di sini
       if (validFiles.length === 0) return;
     }
 
-    // 3. Update state hanya dengan file yang lolos validasi
     setFiles(validFiles);
 
     setMedia(
@@ -44,39 +40,8 @@ export default function PhotosVideosPicker() {
       })),
     );
 
-    // 4. Pindah step jika ada file yang berhasil diproses
-    nextStep();
+    setStep(Steps.Preview);
   };
-
-  // // Pindahkan seluruh logika dari useEffect ke fungsi handler ini
-  // const handleFileChange = (newFiles: File[]) => {
-  //   if (newFiles.length === 0) return;
-
-  //   // Validasi ukuran gambar (> 1MB)
-  //   const hasInvalidImage = newFiles.some(
-  //     (f) => f.type.startsWith("image") && f.size > 1024 * 1024,
-  //   );
-
-  //   if (hasInvalidImage) {
-  //     toast.error("Images must be less than 1MB");
-  //     return; // Berhenti, jangan lanjut ke step berikutnya
-  //   }
-
-  //   // Selalu update local state agar UI FileUpload tetap sinkron
-  //   setFiles(newFiles);
-
-  //   // Jika semua file lolos validasi (termasuk yang 460KB)
-  //   setMedia(
-  //     newFiles.map((file) => ({
-  //       src: URL.createObjectURL(file),
-  //       file: file,
-  //       type: file.type.startsWith("image") ? "image" : "video",
-  //     })),
-  //   );
-
-  //   // Pindah ke step berikutnya dengan aman
-  //   nextStep();
-  // };
 
   return (
     <div className="h-full w-full p-8">
