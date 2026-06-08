@@ -10,18 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as UUsernameRouteRouteImport } from './routes/u.$username.route'
+import { Route as UUsernameIndexRouteImport } from './routes/u.$username.index'
+import { Route as UUsernameSavedRouteImport } from './routes/u.$username.saved'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const UUsernameRoute = UUsernameRouteImport.update({
-  id: '/u/$username',
-  path: '/u/$username',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
@@ -34,39 +31,77 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UUsernameRouteRoute = UUsernameRouteRouteImport.update({
+  id: '/u/$username',
+  path: '/u/$username',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UUsernameIndexRoute = UUsernameIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => UUsernameRouteRoute,
+} as any)
+const UUsernameSavedRoute = UUsernameSavedRouteImport.update({
+  id: '/saved',
+  path: '/saved',
+  getParentRoute: () => UUsernameRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/u/$username': typeof UUsernameRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/u/$username': typeof UUsernameRoute
+  '/u/$username/saved': typeof UUsernameSavedRoute
+  '/u/$username/': typeof UUsernameIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/u/$username': typeof UUsernameRoute
+  '/u/$username/saved': typeof UUsernameSavedRoute
+  '/u/$username': typeof UUsernameIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/u/$username': typeof UUsernameRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/u/$username': typeof UUsernameRoute
+  '/u/$username/saved': typeof UUsernameSavedRoute
+  '/u/$username/': typeof UUsernameIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth/login' | '/auth/signup' | '/u/$username'
+  fullPaths:
+    | '/'
+    | '/u/$username'
+    | '/auth/login'
+    | '/auth/signup'
+    | '/u/$username/saved'
+    | '/u/$username/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth/login' | '/auth/signup' | '/u/$username'
-  id: '__root__' | '/' | '/auth/login' | '/auth/signup' | '/u/$username'
+  to:
+    | '/'
+    | '/auth/login'
+    | '/auth/signup'
+    | '/u/$username/saved'
+    | '/u/$username'
+  id:
+    | '__root__'
+    | '/'
+    | '/u/$username'
+    | '/auth/login'
+    | '/auth/signup'
+    | '/u/$username/saved'
+    | '/u/$username/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  UUsernameRouteRoute: typeof UUsernameRouteRouteWithChildren
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
-  UUsernameRoute: typeof UUsernameRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -76,13 +111,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/u/$username': {
-      id: '/u/$username'
-      path: '/u/$username'
-      fullPath: '/u/$username'
-      preLoaderRoute: typeof UUsernameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/signup': {
@@ -99,14 +127,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/u/$username': {
+      id: '/u/$username'
+      path: '/u/$username'
+      fullPath: '/u/$username'
+      preLoaderRoute: typeof UUsernameRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/u/$username/': {
+      id: '/u/$username/'
+      path: '/'
+      fullPath: '/u/$username/'
+      preLoaderRoute: typeof UUsernameIndexRouteImport
+      parentRoute: typeof UUsernameRouteRoute
+    }
+    '/u/$username/saved': {
+      id: '/u/$username/saved'
+      path: '/saved'
+      fullPath: '/u/$username/saved'
+      preLoaderRoute: typeof UUsernameSavedRouteImport
+      parentRoute: typeof UUsernameRouteRoute
+    }
   }
 }
 
+interface UUsernameRouteRouteChildren {
+  UUsernameSavedRoute: typeof UUsernameSavedRoute
+  UUsernameIndexRoute: typeof UUsernameIndexRoute
+}
+
+const UUsernameRouteRouteChildren: UUsernameRouteRouteChildren = {
+  UUsernameSavedRoute: UUsernameSavedRoute,
+  UUsernameIndexRoute: UUsernameIndexRoute,
+}
+
+const UUsernameRouteRouteWithChildren = UUsernameRouteRoute._addFileChildren(
+  UUsernameRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  UUsernameRouteRoute: UUsernameRouteRouteWithChildren,
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
-  UUsernameRoute: UUsernameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

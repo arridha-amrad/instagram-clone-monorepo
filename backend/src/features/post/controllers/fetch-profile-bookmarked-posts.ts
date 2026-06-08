@@ -14,25 +14,33 @@ export default async function fetchProfileBookmarkedPosts(
       },
       select: {
         id: true,
-        _count: {
+        post: {
           select: {
-            postLikes: true,
-            comments: true,
-            media: true,
-          },
-        },
-        media: {
-          select: {
-            url: true,
-          },
-          take: 1,
-          orderBy: {
-            order: "asc",
+            _count: {
+              select: {
+                postLikes: true,
+                comments: true,
+                media: true,
+              },
+            },
+            media: {
+              select: {
+                url: true,
+              },
+              take: 1,
+              orderBy: {
+                order: "asc",
+              },
+            },
           },
         },
       },
     });
-    return posts;
+    return posts.map((p) => ({
+      id: p.id,
+      media: p.post.media,
+      _count: p.post._count,
+    }));
   } catch (err) {
     throw err;
   }

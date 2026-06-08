@@ -1,11 +1,11 @@
 import { cn } from "#/lib/utils";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
 import { BookmarkIcon, Grid, SquareUser, Video } from "lucide-react";
 
 export function ProfileTabs() {
   const { username } = useParams({ from: "/u/$username" });
-
+  const location = useLocation();
   const navigate = useNavigate();
   const links = [
     {
@@ -29,6 +29,10 @@ export function ProfileTabs() {
       icon: SquareUser,
     },
   ];
+
+  const currentPathSegments = location.pathname.split("/");
+  const currentTab = currentPathSegments[3] || "";
+
   return (
     <Tabs
       onValueChange={(e) => {
@@ -37,7 +41,7 @@ export function ProfileTabs() {
           params: { username },
         });
       }}
-      defaultValue={""}
+      value={currentTab}
     >
       <TabsList>
         {links.map((item) => (

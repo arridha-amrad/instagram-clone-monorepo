@@ -1,15 +1,17 @@
 import ProfileEmptyPosts from "#/components/user-profile/profile-empty-posts";
 import { useQuery } from "@tanstack/react-query";
-import ProfilePostItem from "../../profile-post-item";
-import { profilePostsQueryOptions } from "../query";
+import ProfilePostItem from "../profile-post-item";
+import { profileBookmarkedPostsQueryOptions } from "./query";
 
 type Props = {
   userId: string;
   username: string;
 };
 
-export default function ProfilePosts({ userId, username }: Props) {
-  const { data } = useQuery(profilePostsQueryOptions(username, userId));
+export default function ProfileBookmarkedPosts({ userId, username }: Props) {
+  const { data } = useQuery(
+    profileBookmarkedPostsQueryOptions(username, userId),
+  );
 
   if (!data || data.length === 0) {
     return <ProfileEmptyPosts title="Share Photos" />;
