@@ -11,8 +11,20 @@ import { repost } from "./repost.js";
 import fetchProfilePosts from "./fetch-profile-posts.js";
 import { MyApiError } from "#/errors.js";
 import fetchProfileBookmarkedPosts from "./fetch-profile-bookmarked-posts.js";
+import fetchProfileTaggedPosts from "./fetch-profile-tagged-posts.js";
 
 export const postController = {
+  fetchProfileTaggedPosts: async (c: Context<Env>) => {
+    try {
+      const prisma = c.get("prisma");
+      const userId = c.req.param("userId");
+      if (!userId) throw new MyApiError("missing param", 400);
+      const posts = await fetchProfileTaggedPosts(prisma, userId);
+      return c.json({ success: true, data: posts }, 200);
+    } catch (err) {
+      return errorHandler(err, c);
+    }
+  },
   fetchProfileBookmarkedPosts: async (c: Context<Env>) => {
     try {
       const prisma = c.get("prisma");

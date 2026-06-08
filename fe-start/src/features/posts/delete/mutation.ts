@@ -29,5 +29,8 @@ export const useDeletePostMutation = () => {
       }
       toast.error("Failed to delete. Please try again.");
     },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["profile-posts"] });
+    },
   });
 };

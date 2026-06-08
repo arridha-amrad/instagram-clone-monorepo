@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -32,7 +27,6 @@ model Users {
   username        String
   displayUsername String?
 
-  // Relasi
   sessions         Sessions[]
   accounts         Accounts[]
   collaborators    Collaborator[]
@@ -45,13 +39,9 @@ model Users {
   bookmarks        Bookmark[]
   searchHistories  SearchHistory[]  @relation("UserSearches")
   searchedByOthers SearchHistory[]  @relation("TargetSearches")
-  // Relasi ke tabel Follow
-  // Orang-orang yang memfollow user ini (Followers)
   followers        Follow[]         @relation("UserFollowers")
-
-  // Orang-orang yang difollow oleh user ini (Following)
-  following   Follow[]     @relation("UserFollowing")
-  userProfile UserProfile?
+  following        Follow[]         @relation("UserFollowing")
+  userProfile      UserProfile?
 
   @@unique([email])
   @@unique([username])
@@ -73,13 +63,6 @@ model UserProfile {
   user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// Definisikan Enum untuk Gender agar datanya bersih dan tervalidasi di level DB
-enum Gender {
-  MALE
-  FEMALE
-  OTHER
-}
-
 model Follow {
   followerId  String
   followingId String
@@ -88,7 +71,7 @@ model Follow {
   follower  Users @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
   following Users @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
 
-  @@id([followerId, followingId]) // Compound Primary Key agar tidak ada duplikasi follow yang sama
+  @@id([followerId, followingId])
   @@index([followerId])
   @@index([followingId])
   @@map("follows")
@@ -125,7 +108,6 @@ model Accounts {
   createdAt             DateTime  @default(now()) @map("created_at")
   updatedAt             DateTime  @updatedAt @map("updated_at")
 
-  // Relasi
   users Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
@@ -150,7 +132,6 @@ model Collaborator {
   userId    String   @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
 
-  // Relasi
   post ConcretePost @relation(fields: [postId], references: [id], onDelete: Cascade)
   user Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -164,7 +145,6 @@ model CommentLike {
   commentId String   @map("comment_id")
   createdAt DateTime @default(now()) @map("created_at")
 
-  // Relasi
   comment PostComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
   user    Users       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -180,7 +160,6 @@ model Media {
   order     Int       @map("order")
   createdAt DateTime  @default(now()) @map("created_at")
 
-  // Relasi
   post        ConcretePost     @relation(fields: [postId], references: [id], onDelete: Cascade)
   taggedUsers PostTaggedUser[]
 
@@ -196,7 +175,6 @@ model ConcretePost {
   updatedAt   DateTime    @default(now()) @updatedAt @map("updated_at")
   aspectRatio AspectRatio @map("aspect_ratio")
 
-  // Relasi
   user          Users          @relation(fields: [userId], references: [id], onDelete: Cascade)
   collaborators Collaborator[]
   media         Media[]
@@ -217,7 +195,6 @@ model PostComment {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  // Relasi
   post          ConcretePost  @relation(fields: [postId], references: [id], onDelete: Cascade)
   user          Users         @relation(fields: [userId], references: [id], onDelete: Cascade)
   parentComment PostComment?  @relation("ParentChildren", fields: [parentId], references: [id], onDelete: Cascade)
@@ -233,7 +210,6 @@ model PostLike {
   postId    String   @map("post_id")
   createdAt DateTime @default(now()) @map("created_at")
 
-  // Relasi
   post ConcretePost @relation(fields: [postId], references: [id], onDelete: Cascade)
   user Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -249,7 +225,6 @@ model PostTaggedUser {
   coordinateY Float    @map("coordinate_y")
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp()
 
-  // Relasi
   media Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
   user  Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -288,7 +263,6 @@ model SearchHistory {
   targetId  String   @map("target_id")
   createdAt DateTime @default(now()) @map("created_at")
 
-  // Relasi
   user       Users @relation("UserSearches", fields: [userId], references: [id], onDelete: Cascade)
   targetUser Users @relation("TargetSearches", fields: [targetId], references: [id], onDelete: Cascade)
 
@@ -300,6 +274,12 @@ model SearchHistory {
 // ==========================================
 // ENUMS
 // ==========================================
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
 
 enum AspectRatio {
   RATIO_1_1  @map("1 / 1")

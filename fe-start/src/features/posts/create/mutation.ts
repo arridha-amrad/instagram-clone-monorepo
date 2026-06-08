@@ -16,6 +16,7 @@ export const useCreatePostMutation = () => {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["feed-posts"] });
+      qc.invalidateQueries({ queryKey: ["profile-posts"] });
       toast.success("Post created successfully");
     },
   });

@@ -84,7 +84,7 @@ export default function FeedPostOptions({ postId, userId }: Props) {
           <DialogDescription>More Options</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col">
-          {data?.data?.user && data.data.user.id === userId && (
+          {data?.user && data.user.id === userId && (
             <>
               <DeletePostButton postId={postId} />
               <Separator orientation="horizontal" />

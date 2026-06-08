@@ -19,19 +19,19 @@ export const useBookmarkPostMutation = () => {
       qc.setQueryData(["feed-posts"], (old: TFeedPost[] | undefined) => {
         if (!old) return [];
         return old.map((p) => {
-          if(p.id !== postId) {
-            return p
+          if (p.id !== postId) {
+            return p;
           }
           return {
-          ...p,
-          isBookmarked: !p.isBookmarked,
-          _count: {
-            ...p._count,
-            bookmarks: p.isBookmarked
-              ? p._count.bookmarks - 1
-              : p._count.bookmarks + 1,
-          },
-        }
+            ...p,
+            isBookmarked: !p.isBookmarked,
+            _count: {
+              ...p._count,
+              bookmarks: p.isBookmarked
+                ? p._count.bookmarks - 1
+                : p._count.bookmarks + 1,
+            },
+          };
         });
       });
       return { prevPosts };

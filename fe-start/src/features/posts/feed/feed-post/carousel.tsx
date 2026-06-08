@@ -13,7 +13,7 @@ type Props = {
 
 export default function Carousel({ feedPost }: Props) {
   const mediaUrls = useMemo(() => {
-    return feedPost.media.map((m) => m.url);
+    return feedPost.media.sort((a, b) => a.order - b.order).map((m) => m.url);
   }, [feedPost.media]);
 
   const [openTag, setOpenTag] = useState(false);
@@ -23,11 +23,10 @@ export default function Carousel({ feedPost }: Props) {
       <div className="-ml-4 flex touch-pan-y touch-pinch-zoom">
         {feedPost.media.map((media) => (
           <div
-            className={cn(
-              "w-full overflow-hidden",
-            )}
+            className={cn("w-full overflow-hidden")}
             style={{
-              aspectRatio: feedPost.aspectRatio === "RATIO_4_5" ? "4 / 5" : "1 / 1",
+              aspectRatio:
+                feedPost.aspectRatio === "RATIO_4_5" ? "4 / 5" : "1 / 1",
               transform: "translate3d(0, 0, 0)",
               flex: "0 0 100%",
               minWidth: 0,

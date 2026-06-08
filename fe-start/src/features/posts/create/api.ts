@@ -20,8 +20,6 @@ export const getCloudinaryUploadSignature = async (folderName: string) => {
   const { data } = await axios.post(`${serverHost}/api/file`, {
     folder: folderName,
   });
-  console.log({ signature: data.data });
-
   return data.data as Signature;
 };
 

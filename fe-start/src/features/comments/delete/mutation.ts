@@ -26,7 +26,7 @@ export const useDeleteCommentMutation = (postId: string) => {
                 ...p._count,
                 comments: p._count.comments - 1,
               },
-              comments: p.comments.filter((c) => c.id !== commentId),
+              comments: p.comments?.filter((c) => c.id !== commentId),
             };
           }
           return p;

@@ -33,5 +33,10 @@ postRoutes.get(
   withPrisma,
   postController.fetchProfileBookmarkedPosts,
 );
+postRoutes.get(
+  "/tagged/profile/:userId",
+  withPrisma,
+  postController.fetchProfileTaggedPosts,
+);
 
 export default postRoutes;

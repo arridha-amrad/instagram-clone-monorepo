@@ -36,7 +36,6 @@ export default async function fetchProfilePosts(
           select: {
             url: true,
           },
-          take: 1,
           orderBy: {
             order: "asc",
           },

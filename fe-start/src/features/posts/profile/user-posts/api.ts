@@ -2,8 +2,6 @@ import { publicAxios } from "#/lib/axios";
 
 export const fetchProfilePostsApi = async (userId: string) => {
   const { data } = await publicAxios.get(`/posts/profile/${userId}`);
-  console.log("profile posts : ", data);
-
   return data.data as TProfilePost[];
 };
 

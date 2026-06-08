@@ -1,6 +1,7 @@
 import { Button } from "#/components/ui/button";
 import { useUpdateBgWallpaperMutation } from "#/features/users/update-wallpaper/mutation";
 import { getCroppedImg } from "#/lib/utils";
+// import { getCroppedImg } from "#/lib/utils";
 import { Check, Loader2, X } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import Cropper, { type Area } from "react-easy-crop";
@@ -53,10 +54,14 @@ const UpdatableWallpaper = ({
   const handleSaveCrop = async () => {
     if (!pickedImageUrl || !croppedAreaPixels) return;
     try {
-      const croppedFile = await getCroppedImg(
-        pickedImageUrl,
-        croppedAreaPixels,
-      );
+      const croppedFile = await getCroppedImg({
+        imageSrc: pickedImageUrl,
+        pixelCrop: croppedAreaPixels,
+      });
+      if (!croppedFile) {
+        toast.error("failed to get cropped image");
+        return;
+      }
       setCurrentBackground(URL.createObjectURL(croppedFile));
       const formData = new FormData();
       formData.append("file", croppedFile);

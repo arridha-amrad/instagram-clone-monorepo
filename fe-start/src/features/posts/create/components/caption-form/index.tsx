@@ -37,15 +37,12 @@ export default function FormCaption() {
   const onSubmit = async (data: TCreatePostFormSchema) => {
     try {
       setStep(Steps.Submitting);
-
-      // 1. Upload media
       const promises = mediaWithTaggedUsers.map(async (m) => {
         const { apiKey, cloudName, signature, timestamp } =
           await getCloudinaryUploadSignature(
             `${env.VITE_CLOUDINARY_FOLDER}/post`,
           );
 
-        // 2. Upload
         const { secure_url } = await uploadToCloudinary({
           apiKey,
           cloudName,
@@ -72,7 +69,6 @@ export default function FormCaption() {
         media,
         aspectRatio,
       });
-
       setStep(Steps.Submitted);
     } catch (err) {
       console.log(err);

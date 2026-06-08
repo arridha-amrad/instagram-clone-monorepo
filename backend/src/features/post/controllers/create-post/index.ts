@@ -2,20 +2,13 @@ import { AspectRatio, PrismaClient } from "#/generated/prisma/client.js";
 import { TCreatePostSchema } from "./schema.js";
 
 export const mapStringToAspectRatio = (input: string): AspectRatio => {
-  // 1. Bersihkan spasi tambahan agar "1   /   1" tetap terbaca "1/1"
   const cleanInput = input.replace(/\s+/g, "");
-
-  // 2. Petakan string mentah ke Enum Prisma
   const mapper: Record<string, AspectRatio> = {
     "1/1": AspectRatio.RATIO_1_1,
     "4/5": AspectRatio.RATIO_4_5,
     "9/16": AspectRatio.RATIO_9_16,
-
-    // Mengantisipasi typo populer user "6/19" menjadi "9/16"
     "6/19": AspectRatio.RATIO_9_16,
   };
-
-  // 3. Kembalikan nilainya, atau berikan nilai default jika tidak cocok
   return mapper[cleanInput] || AspectRatio.RATIO_1_1;
 };
 
@@ -24,6 +17,8 @@ export default async function createPost(
   data: TCreatePostSchema,
   userId: string,
 ) {
+  console.log(JSON.stringify(data, null, 2));
+
   const { aspectRatio, caption, collaborators, location, media } = data;
   try {
     const newPost = await prisma.concretePost.create({
@@ -32,8 +27,6 @@ export default async function createPost(
         caption,
         location,
         aspectRatio: mapStringToAspectRatio(aspectRatio),
-
-        // 1. Optimasi Collaborators (Gunakan create jika datanya ada)
         collaborators:
           collaborators && collaborators.length > 0
             ? {
@@ -44,18 +37,13 @@ export default async function createPost(
                 },
               }
             : undefined,
-
-        // 2. SOLUSI: Menggunakan blok `create` (bukan createMany) agar bisa nested ke taggedUsers
         media:
           media && media.length > 0
             ? {
                 create: media.map((m) => ({
-                  // Pastikan m.type dipetakan pas dengan Enum Prisma Anda (IMAGE / VIDEO)
                   mediaType: m.type.toUpperCase() as "IMAGE" | "VIDEO",
                   url: m.src,
                   order: m.order,
-
-                  // Sekarang ini 100% Valid dan Aman di Prisma!
                   taggedUsers:
                     m.taggedUsers && m.taggedUsers.length > 0
                       ? {

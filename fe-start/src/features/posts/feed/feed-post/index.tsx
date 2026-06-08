@@ -19,8 +19,6 @@ import Carousel from "./carousel";
 import { Comments } from "./comments";
 import FeedPostHeader from "./header";
 import HeaderOptions from "./header-options";
-
-// 1. Import Framer Motion
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function FeedPost({ feedPost }: { feedPost: TFeedPost }) {

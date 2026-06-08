@@ -14,6 +14,7 @@ import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as UUsernameRouteRouteImport } from './routes/u.$username.route'
 import { Route as UUsernameIndexRouteImport } from './routes/u.$username.index'
+import { Route as UUsernameTaggedRouteImport } from './routes/u.$username.tagged'
 import { Route as UUsernameSavedRouteImport } from './routes/u.$username.saved'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +42,11 @@ const UUsernameIndexRoute = UUsernameIndexRouteImport.update({
   path: '/',
   getParentRoute: () => UUsernameRouteRoute,
 } as any)
+const UUsernameTaggedRoute = UUsernameTaggedRouteImport.update({
+  id: '/tagged',
+  path: '/tagged',
+  getParentRoute: () => UUsernameRouteRoute,
+} as any)
 const UUsernameSavedRoute = UUsernameSavedRouteImport.update({
   id: '/saved',
   path: '/saved',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/u/$username/saved': typeof UUsernameSavedRoute
+  '/u/$username/tagged': typeof UUsernameTaggedRoute
   '/u/$username/': typeof UUsernameIndexRoute
 }
 export interface FileRoutesByTo {
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/u/$username/saved': typeof UUsernameSavedRoute
+  '/u/$username/tagged': typeof UUsernameTaggedRoute
   '/u/$username': typeof UUsernameIndexRoute
 }
 export interface FileRoutesById {
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/u/$username/saved': typeof UUsernameSavedRoute
+  '/u/$username/tagged': typeof UUsernameTaggedRoute
   '/u/$username/': typeof UUsernameIndexRoute
 }
 export interface FileRouteTypes {
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/signup'
     | '/u/$username/saved'
+    | '/u/$username/tagged'
     | '/u/$username/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/signup'
     | '/u/$username/saved'
+    | '/u/$username/tagged'
     | '/u/$username'
   id:
     | '__root__'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/signup'
     | '/u/$username/saved'
+    | '/u/$username/tagged'
     | '/u/$username/'
   fileRoutesById: FileRoutesById
 }
@@ -141,6 +153,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UUsernameIndexRouteImport
       parentRoute: typeof UUsernameRouteRoute
     }
+    '/u/$username/tagged': {
+      id: '/u/$username/tagged'
+      path: '/tagged'
+      fullPath: '/u/$username/tagged'
+      preLoaderRoute: typeof UUsernameTaggedRouteImport
+      parentRoute: typeof UUsernameRouteRoute
+    }
     '/u/$username/saved': {
       id: '/u/$username/saved'
       path: '/saved'
@@ -153,11 +172,13 @@ declare module '@tanstack/react-router' {
 
 interface UUsernameRouteRouteChildren {
   UUsernameSavedRoute: typeof UUsernameSavedRoute
+  UUsernameTaggedRoute: typeof UUsernameTaggedRoute
   UUsernameIndexRoute: typeof UUsernameIndexRoute
 }
 
 const UUsernameRouteRouteChildren: UUsernameRouteRouteChildren = {
   UUsernameSavedRoute: UUsernameSavedRoute,
+  UUsernameTaggedRoute: UUsernameTaggedRoute,
   UUsernameIndexRoute: UUsernameIndexRoute,
 }
 

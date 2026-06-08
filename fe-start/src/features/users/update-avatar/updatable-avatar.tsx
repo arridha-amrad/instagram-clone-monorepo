@@ -47,10 +47,14 @@ export default function UpdatableAvatar({
   const handleSaveCrop = async () => {
     if (!pickedImageUrl || !croppedAreaPixels) return;
     try {
-      const croppedFile = await getCroppedImg(
-        pickedImageUrl,
-        croppedAreaPixels,
-      );
+      const croppedFile = await getCroppedImg({
+        imageSrc: pickedImageUrl,
+        pixelCrop: croppedAreaPixels,
+      });
+      if (!croppedFile) {
+        toast.error("failed to get cropped image");
+        return;
+      }
       setCurrentAvatar(URL.createObjectURL(croppedFile));
       const formData = new FormData();
       formData.append("file", croppedFile);

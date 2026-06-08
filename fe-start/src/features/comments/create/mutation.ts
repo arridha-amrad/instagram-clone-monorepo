@@ -16,39 +16,6 @@ export const useCreateCommentMutation = () => {
         throw err;
       }
     },
-    // onMutate: async ({ comment, postId }) => {
-    //   if (!data) {
-    //     throw redirect({ to: "/auth/login" });
-    //   }
-    //   await qc.cancelQueries({ queryKey: ["feed-posts"] });
-    //   const randomId = crypto.randomUUID();
-    //   const prevPosts = qc.getQueryData<TFeedPost[]>(["feed-posts"]);
-    //   qc.setQueryData(["feed-posts"], (oldData: TFeedPost[] | undefined) => {
-    //     if (!oldData) return [];
-    //     return oldData.map((p) => {
-    //       if (p.id === postId) {
-    //         return {
-    //           ...p,
-    //           _count: {
-    //             comments: p._count.comments + 1,
-    //           },
-    //           comments: [
-    //             {
-    //               id: randomId,
-    //               postId: p.id,
-    //               comment,
-    //               userId: data.data?.user.id,
-    //               username: data.data?.user.username,
-    //             },
-    //             ...p.comments,
-    //           ],
-    //         };
-    //       }
-    //       return p;
-    //     });
-    //   });
-    //   return { prevPosts };
-    // },
     onSuccess(newComment) {
       qc.setQueryData(["feed-posts"], (oldData: TFeedPost[] | undefined) => {
         if (!oldData) return [];
@@ -63,12 +30,12 @@ export const useCreateCommentMutation = () => {
               comments: [
                 {
                   id: newComment.id,
-                  username: data?.data?.user.username,
+                  username: data?.user.username,
                   comment: newComment.content,
                   postId: newComment.postId,
                   userId: newComment.user.id,
                 },
-                ...p.comments,
+                ...(p.comments ? p.comments : []),
               ],
             };
           }
@@ -77,10 +44,6 @@ export const useCreateCommentMutation = () => {
       });
     },
     onError: () => {
-      // console.log(err);
-      // if (context?.prevPosts) {
-      //   qc.setQueryData(["feed-posts"], context.prevPosts);
-      // }
       toast.error("Failed to post comment");
     },
   });
