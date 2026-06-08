@@ -5,3 +5,7 @@ export const privateAxios = axios.create({
   baseURL: `${serverHost}/api`,
   withCredentials: true,
 });
+
+export const publicAxios = axios.create({
+  baseURL: `${serverHost}/api`,
+});

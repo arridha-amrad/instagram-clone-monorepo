@@ -8,8 +8,21 @@ import { deletePost } from "./delete-post/index.js";
 import { fetchFeedPosts } from "./feed-posts/index.js";
 import { likePost } from "./like-post.js";
 import { repost } from "./repost.js";
+import fetchProfilePosts from "./fetch-profile-posts.js";
+import { MyApiError } from "#/errors.js";
 
 export const postController = {
+  fetchProfilePosts: async (c: Context<Env>) => {
+    try {
+      const prisma = c.get("prisma");
+      const userId = c.req.param("userId");
+      if (!userId) throw new MyApiError("missing param", 400);
+      const posts = await fetchProfilePosts(prisma, userId);
+      return c.json({ success: true, data: posts }, 200);
+    } catch (err) {
+      return errorHandler(err, c);
+    }
+  },
   createPost: async (c: Context<Env>) => {
     try {
       const body = (await c.req.json()) as TCreatePostSchema;

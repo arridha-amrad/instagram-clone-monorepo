@@ -23,4 +23,10 @@ postRoutes.post(
   postController.bookmarkPost,
 );
 
+postRoutes.get(
+  "/profile/:userId",
+  withPrisma,
+  postController.fetchProfilePosts,
+);
+
 export default postRoutes;

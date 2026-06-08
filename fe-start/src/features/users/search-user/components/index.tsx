@@ -18,7 +18,7 @@ export default function SearchUser({ setOpen }: Props) {
         setSearchResult={setSearchResult}
       />
       {isSearchActive ? (
-        <SearchResult users={searchResult} />
+        <SearchResult setOpen={setOpen} users={searchResult} />
       ) : (
         <SearchHistory setOpen={setOpen} />
       )}
