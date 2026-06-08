@@ -125,8 +125,12 @@ export default function MediaOrderPopover() {
   );
 
   const removeMedia = (src: string) => {
+    const newMedia = mediaWithTaggedUsers.filter((item) => item.src !== src);
     setMediaWithTaggedUsers(
-      mediaWithTaggedUsers.filter((item) => item.src !== src),
+      newMedia.map((item, index) => ({
+        ...item,
+        order: index,
+      }))
     );
   };
 
@@ -155,8 +159,12 @@ export default function MediaOrderPopover() {
         (item) => item.src === over.id,
       );
 
+      const movedArray = arrayMove(mediaWithTaggedUsers, oldIndex, newIndex);
       setMediaWithTaggedUsers(
-        arrayMove(mediaWithTaggedUsers, oldIndex, newIndex),
+        movedArray.map((item, index) => ({
+          ...item,
+          order: index,
+        }))
       );
     }
   };

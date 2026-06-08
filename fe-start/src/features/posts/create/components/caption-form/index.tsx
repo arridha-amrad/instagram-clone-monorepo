@@ -37,7 +37,7 @@ export default function FormCaption() {
   const onSubmit = async (data: TCreatePostFormSchema) => {
     try {
       setStep(Steps.Submitting);
-      const promises = mediaWithTaggedUsers.map(async (m) => {
+      const promises = mediaWithTaggedUsers.map(async (m, i) => {
         const { apiKey, cloudName, signature, timestamp } =
           await getCloudinaryUploadSignature(
             `${env.VITE_CLOUDINARY_FOLDER}/post`,
@@ -55,7 +55,7 @@ export default function FormCaption() {
           src: secure_url,
           taggedUsers: m.taggedUsers,
           type: m.type,
-          order: m.order,
+          order: i,
         };
         return newMedia;
       });

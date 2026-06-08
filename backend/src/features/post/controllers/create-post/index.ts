@@ -17,8 +17,6 @@ export default async function createPost(
   data: TCreatePostSchema,
   userId: string,
 ) {
-  console.log(JSON.stringify(data, null, 2));
-
   const { aspectRatio, caption, collaborators, location, media } = data;
   try {
     const newPost = await prisma.concretePost.create({

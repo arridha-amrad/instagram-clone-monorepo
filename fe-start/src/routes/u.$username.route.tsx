@@ -2,26 +2,19 @@ import ProfileFooter from "#/components/footers/profile-footer";
 import { Sidebar } from "#/components/sidebar";
 import ProfileInfo from "#/components/user-profile/profile-info";
 import { ProfileTabs } from "#/components/user-profile/profile-tabs";
-import { getSession } from "#/features/auth/api";
-import { userProfileQueryOptions } from "#/features/users/fetch-profile/query";
-import {
-  createFileRoute,
-  notFound,
-  Outlet,
-  redirect,
-} from "@tanstack/react-router";
+import { authQueryOptions } from "#/features/auth/query";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/u/$username")({
   head: () => ({
     meta: [{ title: "Instagram Clone - Home" }],
   }),
   beforeLoad: async ({ context: { queryClient } }) => {
-    const session = await getSession();
+    const session = await queryClient.ensureQueryData(authQueryOptions());
     if (!session) {
       throw redirect({ to: "/auth/login" });
     }
-    queryClient.setQueryData(["auth"], session);
-    return { session: session };
+    return { session };
   },
   component: RouteComponent,
   notFoundComponent: () => <div>User not found</div>,

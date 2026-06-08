@@ -4,7 +4,9 @@ export function getContext() {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 5 * 60 * 100,
+        staleTime: 1000 * 60 * 5, // 5 menit
+        refetchOnWindowFocus: false, // Matikan refetch saat pindah fokus jendela
+        refetchOnReconnect: false, // Matikan refetch saat koneksi kembali
       },
     },
   });

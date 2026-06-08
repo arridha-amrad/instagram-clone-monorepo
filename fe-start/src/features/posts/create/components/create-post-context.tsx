@@ -108,13 +108,13 @@ export const CreatePostContextProvider = ({ children }: PropsWithChildren) => {
     newData: Array<{ src: string; file: File; type: MediaType }>,
   ) => {
     setMediaWithTaggedUsers((data) => [
-      ...data, // 4
+      ...data,
       ...newData.map((v, i) => ({
         src: v.src,
         file: v.file,
         type: v.type,
         taggedUsers: [],
-        order: i + data.length - 1,
+        order: data.length + i,
       })),
     ]);
   };

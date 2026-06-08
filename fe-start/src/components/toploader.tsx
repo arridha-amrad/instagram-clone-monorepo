@@ -13,8 +13,12 @@ export function TopLoader() {
 
   useEffect(() => {
     // 1. Jalankan NProgress saat router bersiap memuat data rute baru
-    const unsubBeforeLoad = router.subscribe("onBeforeLoad", () => {
-      NProgress.start();
+    const unsubBeforeLoad = router.subscribe("onBeforeLoad", (event) => {
+      // event.hrefChanged bernilai true jika pathname, search params, atau hash berubah.
+      // Jika user klik link menuju halaman + params yang persis sama, nilainya false.
+      if (event.hrefChanged) {
+        NProgress.start();
+      }
     });
 
     // 2. Hentikan NProgress saat navigasi dan render rute baru selesai sepenuhnya
