@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestRouteImport } from './routes/test'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PPostIdRouteImport } from './routes/p.$postId'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as UUsernameRouteRouteImport } from './routes/u.$username.route'
@@ -17,9 +19,19 @@ import { Route as UUsernameIndexRouteImport } from './routes/u.$username.index'
 import { Route as UUsernameTaggedRouteImport } from './routes/u.$username.tagged'
 import { Route as UUsernameSavedRouteImport } from './routes/u.$username.saved'
 
+const TestRoute = TestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PPostIdRoute = PPostIdRouteImport.update({
+  id: '/p/$postId',
+  path: '/p/$postId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
@@ -55,17 +67,21 @@ const UUsernameSavedRoute = UUsernameSavedRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/test': typeof TestRoute
   '/u/$username': typeof UUsernameRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/p/$postId': typeof PPostIdRoute
   '/u/$username/saved': typeof UUsernameSavedRoute
   '/u/$username/tagged': typeof UUsernameTaggedRoute
   '/u/$username/': typeof UUsernameIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/test': typeof TestRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/p/$postId': typeof PPostIdRoute
   '/u/$username/saved': typeof UUsernameSavedRoute
   '/u/$username/tagged': typeof UUsernameTaggedRoute
   '/u/$username': typeof UUsernameIndexRoute
@@ -73,9 +89,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/test': typeof TestRoute
   '/u/$username': typeof UUsernameRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/p/$postId': typeof PPostIdRoute
   '/u/$username/saved': typeof UUsernameSavedRoute
   '/u/$username/tagged': typeof UUsernameTaggedRoute
   '/u/$username/': typeof UUsernameIndexRoute
@@ -84,26 +102,32 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/test'
     | '/u/$username'
     | '/auth/login'
     | '/auth/signup'
+    | '/p/$postId'
     | '/u/$username/saved'
     | '/u/$username/tagged'
     | '/u/$username/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/test'
     | '/auth/login'
     | '/auth/signup'
+    | '/p/$postId'
     | '/u/$username/saved'
     | '/u/$username/tagged'
     | '/u/$username'
   id:
     | '__root__'
     | '/'
+    | '/test'
     | '/u/$username'
     | '/auth/login'
     | '/auth/signup'
+    | '/p/$postId'
     | '/u/$username/saved'
     | '/u/$username/tagged'
     | '/u/$username/'
@@ -111,18 +135,34 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TestRoute: typeof TestRoute
   UUsernameRouteRoute: typeof UUsernameRouteRouteWithChildren
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
+  PPostIdRoute: typeof PPostIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/test': {
+      id: '/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/p/$postId': {
+      id: '/p/$postId'
+      path: '/p/$postId'
+      fullPath: '/p/$postId'
+      preLoaderRoute: typeof PPostIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/signup': {
@@ -188,9 +228,11 @@ const UUsernameRouteRouteWithChildren = UUsernameRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TestRoute: TestRoute,
   UUsernameRouteRoute: UUsernameRouteRouteWithChildren,
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
+  PPostIdRoute: PPostIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

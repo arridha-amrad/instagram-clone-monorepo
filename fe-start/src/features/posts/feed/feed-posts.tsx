@@ -1,28 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-import FeedPost from "./feed-post";
 import { AnimatePresence, motion } from "motion/react";
-import { feedPostsQueryOptions } from "./query";
 import type { TFeedPost } from "./api";
+import FeedPost from "./feed-post";
 
 type Props = {
-  posts: TFeedPost[]
-}
+  posts: TFeedPost[];
+};
 
-export default function FeedPosts({posts}: Props) {
-  const { data: feedPosts, isLoading } = useQuery({
-    ...feedPostsQueryOptions(),
-    initialData: posts
-  });
-
-  if (isLoading) {
-    return (
-      <p>loading...</p>
-    )
-  }
-
+export default function FeedPosts({ posts }: Props) {
   return (
     <AnimatePresence initial={false}>
-      {feedPosts?.map((post) => (
+      {posts?.map((post) => (
         <motion.div
           key={post.id}
           layout
@@ -40,5 +27,5 @@ export default function FeedPosts({posts}: Props) {
         </motion.div>
       ))}
     </AnimatePresence>
-  )
+  );
 }

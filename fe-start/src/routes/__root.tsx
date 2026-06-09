@@ -5,16 +5,13 @@ import {
   createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
-
 import appCss from "../styles.css?url";
-
+import { TopLoader } from "#/components/toploader";
 import { TooltipProvider } from "#/components/ui/tooltip";
 import { ThemeProvider } from "#/context/theme-context";
 import type { QueryClient } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
-import { TopLoader } from "#/components/toploader";
 
 interface MyRouterContext {
   queryClient: QueryClient;

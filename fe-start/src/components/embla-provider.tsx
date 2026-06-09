@@ -64,7 +64,9 @@ export default function EmblaProvider({
   return (
     <div className="group relative w-full">
       <div
-        style={{ aspectRatio }}
+        style={{
+          aspectRatio: aspectRatio === "RATIO_4_5" ? "4 / 5" : "1 / 1",
+        }}
         className={cn("overflow-hidden")}
         ref={emblaRef}
       >

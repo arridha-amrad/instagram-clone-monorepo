@@ -8,6 +8,7 @@ const postRoutes = new Hono<Env>();
 
 postRoutes.post("/", withPrisma, requireAuth, postController.createPost);
 postRoutes.get("/feed", withPrisma, requireAuth, postController.fetchFeedPosts);
+postRoutes.get("/detail/:postId", withPrisma, postController.fetchPostDetail);
 postRoutes.delete(
   "/:postId",
   withPrisma,

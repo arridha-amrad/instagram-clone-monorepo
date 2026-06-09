@@ -1,9 +1,10 @@
+import { createClientOnlyFn } from "@tanstack/react-start";
 import {
   createContext,
   type ReactNode,
   useContext,
-  useEffect,
   useState,
+  useMemo,
 } from "react";
 
 interface VolumeContextType {
@@ -15,41 +16,31 @@ interface VolumeContextType {
 
 const VolumeContext = createContext<VolumeContextType | undefined>(undefined);
 
+// 1. Bungkus fungsi pembaca localStorage dengan createClientOnlyFn
+const getStoredMute = createClientOnlyFn(() => {
+  const saved = localStorage.getItem("isMuted");
+  return saved ? JSON.parse(saved) : true;
+});
+
+const getStoredVolume = createClientOnlyFn(() => {
+  const saved = localStorage.getItem("volume");
+  return saved ? JSON.parse(saved) : [80];
+});
+
 export function VolumeProvider({ children }: { children: ReactNode }) {
-  const [mounted, setMounted] = useState(false);
-
-  const [isMuted, setIsMuted] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("isMuted");
-      return saved ? JSON.parse(saved) : true;
-    }
-    return true;
-  });
-
-  const [volume, setVolume] = useState<Array<number>>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("volume");
-      return saved ? JSON.parse(saved) : [80];
-    }
-    return [80];
-  });
-
-  useEffect(() => {
-    const savedVolume = localStorage.getItem("volume");
-    const savedMuted = localStorage.getItem("isMuted");
-    if (savedMuted) {
-      // eslint-disable-next-line
-      setIsMuted(JSON.parse(savedMuted));
-    }
-    if (savedVolume) {
-      setVolume(JSON.parse(savedVolume));
-    }
-
-    setMounted(true);
-  }, []);
+  // 2. Gunakan langsung di dalam useState.
+  // Di Server, nilainya otomatis fallback ke nilai default setelah tanda `??`
+  const [isMuted, setIsMuted] = useState<boolean>(
+    () => getStoredMute() ?? true,
+  );
+  const [volume, setVolume] = useState<Array<number>>(
+    () => getStoredVolume() ?? [80],
+  );
 
   const setGlobalMute = (muted: boolean) => {
     setIsMuted(muted);
+    // Kita juga bisa bungkus ini, tapi karena fungsi ini hanya dipicu oleh interaksi user (klik tombol),
+    // dipastikan ini hanya berjalan di client.
     localStorage.setItem("isMuted", JSON.stringify(muted));
   };
 
@@ -58,12 +49,18 @@ export function VolumeProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("volume", JSON.stringify(val));
   };
 
-  if (!mounted) return null;
+  const contextValue = useMemo(
+    () => ({
+      isMuted,
+      volume,
+      setGlobalMute,
+      setGlobalVolume,
+    }),
+    [isMuted, volume],
+  );
 
   return (
-    <VolumeContext.Provider
-      value={{ isMuted, volume, setGlobalMute, setGlobalVolume }}
-    >
+    <VolumeContext.Provider value={contextValue}>
       {children}
     </VolumeContext.Provider>
   );

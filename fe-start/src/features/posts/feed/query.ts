@@ -12,4 +12,5 @@ export const feedPostsQueryOptions = () =>
       }
     },
     staleTime: 5 * 60 * 1000,
+    gcTime: 1000 * 60 * 10,
   });

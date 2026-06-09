@@ -5,15 +5,28 @@ import { bookmarkPost } from "./bookmark-post.js";
 import createPost from "./create-post/index.js";
 import { TCreatePostSchema } from "./create-post/schema.js";
 import { deletePost } from "./delete-post/index.js";
-import { fetchFeedPosts } from "./feed-posts/index.js";
+import { fetchFeedPosts } from "./fetch-feed-posts.js";
 import { likePost } from "./like-post.js";
 import { repost } from "./repost.js";
 import fetchProfilePosts from "./fetch-profile-posts.js";
 import { MyApiError } from "#/errors.js";
 import fetchProfileBookmarkedPosts from "./fetch-profile-bookmarked-posts.js";
 import fetchProfileTaggedPosts from "./fetch-profile-tagged-posts.js";
+import fetchPostDetail from "./fetch-post-detail.js";
 
 export const postController = {
+  fetchPostDetail: async (c: Context<Env>) => {
+    try {
+      const prisma = c.get("prisma");
+      const user = c.get("user");
+      const postId = c.req.param("postId");
+      if (!postId) throw new MyApiError("postId param is missing", 400);
+      const post = await fetchPostDetail(prisma, postId, user?.id);
+      return c.json({ success: true, data: post }, 200);
+    } catch (err) {
+      return errorHandler(err, c);
+    }
+  },
   fetchProfileTaggedPosts: async (c: Context<Env>) => {
     try {
       const prisma = c.get("prisma");

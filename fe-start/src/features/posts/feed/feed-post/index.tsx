@@ -45,7 +45,10 @@ export default function FeedPost({ feedPost }: { feedPost: TFeedPost }) {
             isLiked={feedPost.isLiked}
             totalLikes={feedPost._count.postLikes}
           />
-          <CommentButton totalComments={feedPost._count.comments} />
+          <CommentButton
+            postId={feedPost.id}
+            totalComments={feedPost._count.comments}
+          />
           <RepostButton
             postId={feedPost.id}
             isRepost={feedPost.isRepost}
@@ -97,11 +100,17 @@ export default function FeedPost({ feedPost }: { feedPost: TFeedPost }) {
   );
 }
 
-const CommentButton = ({ totalComments }: { totalComments: number }) => {
+const CommentButton = ({
+  totalComments,
+  postId,
+}: {
+  totalComments: number;
+  postId: string;
+}) => {
   const navigate = useNavigate();
   return (
     <button
-      onClick={() => navigate({ to: "/" })}
+      onClick={() => navigate({ to: "/p/$postId", params: { postId } })}
       className="flex items-center gap-2"
     >
       <CommentIcon />
