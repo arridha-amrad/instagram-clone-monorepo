@@ -4,7 +4,7 @@ import { useRepostMutation } from "./mutation";
 interface Props {
   postId: string;
   isRepost: boolean;
-  totalRepost: number;
+  totalRepost?: number;
 }
 
 export default function RepostButton({ postId, isRepost, totalRepost }: Props) {
@@ -13,7 +13,7 @@ export default function RepostButton({ postId, isRepost, totalRepost }: Props) {
   return (
     <button onClick={() => mutate(postId)} className="flex items-center gap-2">
       {isRepost ? <RepostIcon className="text-green-500" /> : <RepostIcon />}
-      {totalRepost > 0 && (
+      {totalRepost && totalRepost > 0 && (
         <span className="text-sm font-medium">{totalRepost}</span>
       )}
     </button>

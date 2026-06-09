@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { postDetailQueryOptions } from "../query";
 import { useParams } from "@tanstack/react-router";
 
-export default function PostDetailCarousel() {
+export default function Carousel() {
   const { postId } = useParams({ from: "/p/$postId" });
   const { data: post } = useQuery(postDetailQueryOptions(postId));
 

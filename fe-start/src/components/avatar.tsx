@@ -12,7 +12,7 @@ export default function Avatar({
 }: {
   className?: string;
   size?: "default" | "sm" | "lg";
-  src?: string;
+  src?: string | null;
 }) {
   return (
     <AvatarContainer size={size} className={className} {...props}>

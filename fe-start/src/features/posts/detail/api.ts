@@ -1,9 +1,19 @@
 import { privateAxios } from "#/lib/axios";
+import { createServerFn } from "@tanstack/react-start";
+import { getRequestHeaders } from "@tanstack/react-start/server";
 
-export const fetchPostDetailApi = async (postId: string) => {
-  const { data } = await privateAxios.get(`/posts/detail/${postId}`);
-  return data.data as TDetailPost;
-};
+export const fetchPostDetailApi = createServerFn({ method: "GET" })
+  .inputValidator((postId: string) => postId)
+  .handler(async ({ data: postId }) => {
+    const headers = getRequestHeaders();
+    const headersPlainObject = Object.fromEntries(headers.entries());
+    const { data } = await privateAxios.get(`/posts/detail/${postId}`, {
+      headers: {
+        ...headersPlainObject,
+      },
+    });
+    return data.data as TDetailPost;
+  });
 
 export type MediaType = "image" | "video";
 type TAspectRatio = "RATIO_4_5" | "RATIO_1_1";

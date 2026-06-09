@@ -54,15 +54,13 @@ export const convertBlobToFile = createClientOnlyFn(
   },
 );
 
-export const formatJoinedDate = createClientOnlyFn(
-  (date: Date | string | number | undefined) => {
-    if (!date) return "";
-    const d = new Date(date);
-    if (isNaN(d.getTime())) return "";
-    const formatter = new Intl.DateTimeFormat("en-US", {
-      month: "long",
-      year: "numeric",
-    });
-    return `Joined ${formatter.format(d)}`;
-  },
-);
+export const formatJoinedDate = (date: Date | string | number | undefined) => {
+  if (!date) return "";
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "";
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+  return `Joined ${formatter.format(d)}`;
+};

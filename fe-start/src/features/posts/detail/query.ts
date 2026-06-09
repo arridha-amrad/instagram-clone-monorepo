@@ -6,7 +6,7 @@ export const postDetailQueryOptions = (postId: string) =>
     queryKey: ["post-detail", postId],
     queryFn: async () => {
       try {
-        return fetchPostDetailApi(postId);
+        return fetchPostDetailApi({data: postId});
       } catch (err) {
         throw err;
       }

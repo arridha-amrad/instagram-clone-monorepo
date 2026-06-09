@@ -10,13 +10,22 @@ type Props = {
   post: TDetailPost;
 };
 
-export default function PostDetailHeader({ post }: Props) {
+export default function Header({ post }: Props) {
   const images = useMemo(() => {
     return [
       post.user.image ?? "/default.jpg",
       ...post.collaborators.map((c) => c.user.image ?? "/default.jpg"),
     ];
   }, [post.id]);
+
+  const usernames = useMemo(() => {
+    return [
+      post.user.username,
+      ...(post.collaborators?.map((c) => c.user.username) ?? []),
+    ];
+  }, [post.id, post.collaborators]);
+
+  console.log(usernames);
 
   return (
     <div className="flex items-start w-full gap-x-4 p-4">
@@ -28,7 +37,7 @@ export default function PostDetailHeader({ post }: Props) {
       </AvatarGroup>
       {/* username */}
       <div className="flex-1">
-        <FormattedUserLinks usernames={["alex008", "johndoe"]} />
+        <FormattedUserLinks usernames={usernames} />
       </div>
       {/* more options */}
       <Button size={"icon-sm"} variant={"secondary"}>
@@ -39,6 +48,8 @@ export default function PostDetailHeader({ post }: Props) {
 }
 
 function FormattedUserLinks({ usernames }: { usernames: string[] }) {
+  console.log("here username : ", usernames);
+
   if (!usernames || usernames.length === 0) return null;
 
   // Kondisi 1: Hanya 1 username
@@ -46,9 +57,11 @@ function FormattedUserLinks({ usernames }: { usernames: string[] }) {
     return (
       <Link
         to="/u/$username"
-        className="font-semibold"
+        className="font-semibold text-sm"
         params={{ username: usernames[0] }}
-      ></Link>
+      >
+        {usernames[0]}
+      </Link>
     );
   }
 
@@ -59,7 +72,7 @@ function FormattedUserLinks({ usernames }: { usernames: string[] }) {
         {/* <Link  to={`/${usernames[0]}`}>{usernames[0]}</Link> */}
         <Link
           to="/u/$username"
-          className="font-semibold"
+          className="font-semibold text-sm"
           params={{ username: usernames[0] }}
         >
           {usernames[0]}
@@ -67,7 +80,7 @@ function FormattedUserLinks({ usernames }: { usernames: string[] }) {
         {" and "}
         <Link
           to="/u/$username"
-          className="font-semibold"
+          className="font-semibold text-sm"
           params={{ username: usernames[1] }}
         >
           {usernames[1]}
@@ -87,7 +100,7 @@ function FormattedUserLinks({ usernames }: { usernames: string[] }) {
           <span key={username}>
             <Link
               to="/u/$username"
-              className="font-semibold"
+              className="font-semibold text-sm"
               params={{ username }}
             >
               {username}

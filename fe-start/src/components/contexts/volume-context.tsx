@@ -1,11 +1,5 @@
-import { createClientOnlyFn } from "@tanstack/react-start";
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useState,
-  useMemo,
-} from "react";
+import { createIsomorphicFn } from "@tanstack/react-start";
+import { createContext, type ReactNode, use, useMemo, useState } from "react";
 
 interface VolumeContextType {
   isMuted: boolean;
@@ -17,15 +11,29 @@ interface VolumeContextType {
 const VolumeContext = createContext<VolumeContextType | undefined>(undefined);
 
 // 1. Bungkus fungsi pembaca localStorage dengan createClientOnlyFn
-const getStoredMute = createClientOnlyFn(() => {
-  const saved = localStorage.getItem("isMuted");
-  return saved ? JSON.parse(saved) : true;
-});
+// const getStoredMute = createClientOnlyFn(() => {
+//   const saved = localStorage.getItem("isMuted");
+//   return saved ? JSON.parse(saved) : true;
+// });
 
-const getStoredVolume = createClientOnlyFn(() => {
-  const saved = localStorage.getItem("volume");
-  return saved ? JSON.parse(saved) : [80];
-});
+// const getStoredVolume = createClientOnlyFn(() => {
+//   const saved = localStorage.getItem("volume");
+//   return saved ? JSON.parse(saved) : [80];
+// });
+
+const getStoredMute = createIsomorphicFn()
+  .server(() => undefined)
+  .client(() => {
+    const saved = localStorage.getItem("isMuted");
+    return saved ? (JSON.parse(saved) as boolean) : true;
+  });
+
+const getStoredVolume = createIsomorphicFn()
+  .server(() => undefined)
+  .client(() => {
+    const saved = localStorage.getItem("volume");
+    return saved ? (JSON.parse(saved) as number[]) : [80];
+  });
 
 export function VolumeProvider({ children }: { children: ReactNode }) {
   // 2. Gunakan langsung di dalam useState.
@@ -67,7 +75,7 @@ export function VolumeProvider({ children }: { children: ReactNode }) {
 }
 
 export const useVolume = () => {
-  const context = useContext(VolumeContext);
+  const context = use(VolumeContext);
   if (!context) throw new Error("useVolume must be used within VolumeProvider");
   return context;
 };
