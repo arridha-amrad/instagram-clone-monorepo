@@ -52,7 +52,7 @@ const CommentItem = ({
         <span className="font-semibold pr-2">{username}</span>
         {comment}
       </div>
-      <div className="-mt-2 shrink-0">
+      <div className="shrink-0">
         <DeleteCommentButton commentId={commentId} postId={postId} />
       </div>
     </div>

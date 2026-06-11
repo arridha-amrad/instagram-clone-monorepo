@@ -4,6 +4,8 @@ import LikeCommentButton from "../../like/like-comment-button";
 import type { TComment } from "../api";
 import { DeleteCommentButton } from "../../delete/delete-comment-button";
 import { useParams } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { authQueryOptions } from "#/features/auth/query";
 
 type Props = {
   comment: TComment;
@@ -11,6 +13,8 @@ type Props = {
 
 export default function CommentItem({ comment }: Props) {
   const { postId } = useParams({ from: "/p/$postId" });
+  const { data: authUser } = useQuery(authQueryOptions());
+  const isCommentOwner = comment.user.id === authUser?.user.id;
   return (
     <div className="flex gap-x-4 text-sm items-start">
       <Avatar src={comment.user.image} />
@@ -25,7 +29,9 @@ export default function CommentItem({ comment }: Props) {
             <span>{comment._count.commentLikes} likes</span>
           )}
           <button>Reply</button>
-          <DeleteCommentButton commentId={comment.id} postId={postId} />
+          {isCommentOwner && (
+            <DeleteCommentButton commentId={comment.id} postId={postId} />
+          )}
         </div>
       </div>
       <div className="flex flex-col gap-4">

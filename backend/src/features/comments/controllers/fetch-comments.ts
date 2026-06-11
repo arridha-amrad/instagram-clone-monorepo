@@ -11,7 +11,7 @@ export default async function fetchComments(
         postId,
       },
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
       select: {
         id: true,

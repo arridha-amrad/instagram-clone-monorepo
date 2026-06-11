@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { bookmarksPostApi } from "./api";
 import type { TFeedPost } from "../feed/api";
 import toast from "react-hot-toast";
+import type { TDetailPost } from "../detail/api";
 
 export const useBookmarkPostMutation = () => {
   const qc = useQueryClient();
@@ -14,6 +15,22 @@ export const useBookmarkPostMutation = () => {
       }
     },
     onMutate: async (postId) => {
+      await qc.cancelQueries({ queryKey: ["post-detail", postId] });
+      const prevPostDetail = qc.getQueryData<TDetailPost | undefined>([
+        "post-detail",
+        postId,
+      ]);
+      qc.setQueryData(
+        ["post-detail", postId],
+        (old: TDetailPost | undefined) => {
+          if (!old) return undefined;
+          return {
+            ...old,
+            isBookmarked: !old.isBookmarked,
+          };
+        },
+      );
+
       await qc.cancelQueries({ queryKey: ["feed-posts"] });
       const prevPosts = qc.getQueryData<TFeedPost[]>(["feed-posts"]);
       qc.setQueryData(["feed-posts"], (old: TFeedPost[] | undefined) => {
@@ -34,12 +51,15 @@ export const useBookmarkPostMutation = () => {
           };
         });
       });
-      return { prevPosts };
+      return { prevPosts, prevPostDetail };
     },
-    onError: (err, __, context) => {
+    onError: (err, postId, context) => {
       console.log(err);
       if (context?.prevPosts) {
         qc.setQueryData(["feed-posts"], context.prevPosts);
+      }
+      if (context?.prevPostDetail) {
+        qc.setQueryData(["post-detail", postId], context.prevPostDetail);
       }
       toast.error("Failed to bookmark. Please try again.");
     },

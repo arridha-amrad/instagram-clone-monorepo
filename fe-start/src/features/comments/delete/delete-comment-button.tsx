@@ -1,4 +1,3 @@
-import { Button } from "#/components/ui/button";
 import { Trash } from "lucide-react";
 import { useDeleteCommentMutation } from "./mutation";
 
@@ -11,14 +10,12 @@ export function DeleteCommentButton({
 }) {
   const { mutate } = useDeleteCommentMutation(postId);
   return (
-    <Button
+    <button
       onClick={() => mutate(commentId)}
       title="delete"
-      size={"icon-sm"}
-      className="rounded-full group"
-      variant={"ghost"}
+      className="group size-max"
     >
-      <Trash className="text-muted-foreground group-hover:text-destructive" />
-    </Button>
+      <Trash className="text-muted-foreground group-hover:text-destructive size-3" />
+    </button>
   );
 }
