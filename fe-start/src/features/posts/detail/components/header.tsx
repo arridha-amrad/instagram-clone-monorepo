@@ -25,8 +25,6 @@ export default function Header({ post }: Props) {
     ];
   }, [post.id, post.collaborators]);
 
-  console.log(usernames);
-
   return (
     <div className="flex items-start w-full gap-x-4 p-4">
       {/* Avatar */}
@@ -48,8 +46,6 @@ export default function Header({ post }: Props) {
 }
 
 function FormattedUserLinks({ usernames }: { usernames: string[] }) {
-  console.log("here username : ", usernames);
-
   if (!usernames || usernames.length === 0) return null;
 
   // Kondisi 1: Hanya 1 username

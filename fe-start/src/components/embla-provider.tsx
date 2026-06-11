@@ -35,7 +35,7 @@ export default function EmblaProvider({
     setSelectedIndex(api.selectedScrollSnap());
   }, []);
 
-  // Gunakan reInit untuk merubah opsi secara dinamis
+  // Gunakan reInit untuk mengubah opsi secara dinamis
   useEffect(() => {
     if (emblaApi) {
       emblaApi.reInit({ watchDrag: !isLocked && isDragEnabled });

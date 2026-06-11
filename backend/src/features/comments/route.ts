@@ -1,4 +1,3 @@
-import withPrisma from "#/lib/prisma.js";
 import { requireAuth } from "#/middlewares/requireAuth.js";
 import { Hono } from "hono";
 import { commentsControllers } from "./controllers/index.js";
@@ -6,10 +5,15 @@ import { Env } from "#/types.js";
 
 const commentRoutes = new Hono<Env>();
 
-commentRoutes.use(withPrisma, requireAuth);
+commentRoutes.get("/:postId", commentsControllers.fetchComments);
 
-commentRoutes.post("/", commentsControllers.createComment);
+commentRoutes.post("/", requireAuth, commentsControllers.createComment);
+commentRoutes.post("/like", requireAuth, commentsControllers.likeComment);
 
-commentRoutes.delete("/:commentId", commentsControllers.deleteComment);
+commentRoutes.delete(
+  "/:commentId",
+  requireAuth,
+  commentsControllers.deleteComment,
+);
 
 export default commentRoutes;

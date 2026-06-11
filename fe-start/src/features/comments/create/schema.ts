@@ -13,6 +13,7 @@ export const createCommentFormSchema = z.object({
 export const createCommentApiSchema = z.object({
   postId: z.string().min(1, "postId is required"),
   comment: commentSchema,
+  commentParentId: z.string().optional(),
 });
 
 export type TCreateCommentSchema = z.infer<typeof createCommentFormSchema>;

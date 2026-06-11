@@ -4,7 +4,7 @@ import { authQueryOptions } from "#/features/auth/query";
 import CommentForm from "#/features/comments/create/comment-form";
 import Actions from "#/features/posts/detail/components/actions";
 import Carousel from "#/features/posts/detail/components/carousel";
-import Comments from "#/features/posts/detail/components/comments";
+import Comments from "#/features/comments/fetch/components/comments";
 import Content from "#/features/posts/detail/components/content";
 import Header from "#/features/posts/detail/components/header";
 import { postDetailQueryOptions } from "#/features/posts/detail/query";
@@ -13,6 +13,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMeasure } from "@uidotdev/usehooks";
 import { formatDistanceToNowStrict } from "date-fns";
 import { Loader2 } from "lucide-react";
+import { commentsQueryOptions } from "#/features/comments/fetch/query";
 
 export const Route = createFileRoute("/p/$postId")({
   head: () => ({
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/p/$postId")({
   },
   loader: async ({ context: { queryClient }, params: { postId } }) => {
     await queryClient.ensureQueryData(postDetailQueryOptions(postId));
+    await queryClient.ensureQueryData(commentsQueryOptions(postId));
   },
   notFoundComponent: () => <p>post not found</p>,
   errorComponent: () => <div>something went wrong</div>,
@@ -39,16 +41,10 @@ function RouteComponent() {
   const { data } = useSuspenseQuery(postDetailQueryOptions(postId));
   const [ref, { height }] = useMeasure();
   return (
-    <div
-      id="parent"
-      className="mx-auto flex min-h-svh w-full max-w-300 gap-x-4"
-    >
+    <div className="mx-auto flex min-h-svh w-full max-w-300 gap-x-4">
       {session && <Sidebar />}
-      {/* 1. Bungkus dengan items-start agar baris ini tidak dipaksa setinggi layar */}
-      <div className="flex-1 p-4 flex items-start max-w-250 mx-auto">
-        {/* 2. SUB-WRAPPER: Berikan w-full dan flex. Secara default h-auto (mengikuti anak tertinggi) */}
-        <div className="flex w-full">
-          {/* 3. Kotak Merah: Mengontrol lebar (grow) dan tinggi lewat aspect-ratio */}
+      <div className="flex-1 flex items-start max-w-250 mx-auto p-4">
+        <div className="flex w-full rounded-xl overflow-hidden">
           <div
             ref={ref}
             style={{
@@ -58,10 +54,10 @@ function RouteComponent() {
           >
             <Carousel />
           </div>
-          {/* 4. Kotak Hijau: w-[350px] konstan, dan tingginya otomatis mengikuti tinggi sub-wrapper (tinggi si merah) */}
+
           <div
             style={{ height: height ?? 0 }}
-            className="w-112.5 shrink-0 bg-muted flex flex-col"
+            className="w-87.5 shrink-0 bg-muted flex flex-col"
           >
             <Header post={data} />
             <Separator />

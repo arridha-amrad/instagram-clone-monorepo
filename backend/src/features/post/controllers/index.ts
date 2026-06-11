@@ -19,8 +19,6 @@ export const postController = {
     try {
       const prisma = c.get("prisma");
       const user = c.get("user");
-      console.log({ user });
-
       const postId = c.req.param("postId");
       if (!postId) throw new MyApiError("postId param is missing", 400);
       const post = await fetchPostDetail(prisma, postId, user?.id);

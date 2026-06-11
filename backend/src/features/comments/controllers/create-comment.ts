@@ -6,6 +6,7 @@ export default async function createComment(
   postId: string,
   userId: string,
   comment: string,
+  commentParentId?: string,
 ) {
   try {
     const post = await prisma.concretePost.findUnique({
@@ -21,6 +22,7 @@ export default async function createComment(
         postId,
         content: comment,
         userId,
+        parentId: commentParentId,
       },
       select: {
         id: true,
